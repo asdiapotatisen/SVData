@@ -6,7 +6,9 @@ import os
 import json
 import svapi
 
-filepath = r"c://file/path/here" #ONLY EDIT THIS
+date = "" #ONLY EDIT THIS, DDMMYY
+
+database = {}
 
 svidcount = 0
 duplicount = 0
@@ -99,11 +101,8 @@ for i in range(0, len(finallist)):
         userdatabasedict["discordroles"] = []
     
     username = userdatabasedict["userName"]
-    filename = username + ".txt"
     
-    filepathe = os.path.join(filepath, filename)
+    database[date][username] = userdatabasedict
 
-    with open(filepathe, "a") as outfile:
-        json.dump(userdatabasedict, outfile, indent=2)
     print("Getting data: ", end='')
     print(i)
