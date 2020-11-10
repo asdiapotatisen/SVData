@@ -8,8 +8,6 @@ import svapi
 
 date = "" #ONLY EDIT THIS, DDMMYY
 
-database = {}
-
 svidcount = 0
 duplicount = 0
 
@@ -88,6 +86,10 @@ os.remove("svidfinal.txt")
 with open("svidfinal.txt", 'a') as outfile:
     json.dump(finallist, outfile, indent=2)
 
+with open("database.json") as infile:
+    database = json.load(infile)
+
+database[date] = {}
 
 for i in range(0, len(finallist)):
     try:
@@ -98,6 +100,7 @@ for i in range(0, len(finallist)):
         rolelist = svapi.GetDiscordRolesFromSVID(svid)
         userdatabasedict["discordroles"] = rolelist
     except json.decoder.JSONDecodeError:
+        userdatabasedict["discord_id"] = None
         userdatabasedict["discordroles"] = []
     
     username = userdatabasedict["userName"]
@@ -106,3 +109,8 @@ for i in range(0, len(finallist)):
 
     print("Getting data: ", end='')
     print(i)
+
+os.remove("database.json")
+
+with open("database.json", "a") as outfile:
+    json.dump(database, outfile, indent=2)
