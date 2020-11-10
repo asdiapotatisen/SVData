@@ -1,4 +1,5 @@
 import json
+import os
 
 with open("database.json") as infile:
   database = json.load(infile)
@@ -16,6 +17,8 @@ for date in database
       mdtext = mdtext + f"<br>| {key} | {value}|"
     mdtext = mdtext + "</detail>"
   mdtext = mdtext + "</detail>"
+
+os.remove("database.md")
 
 with open("database.md", "a") as outfile:
   outfile.write(mdtext)
