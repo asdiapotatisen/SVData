@@ -1,1 +1,9 @@
-
+{
+    date :
+    {
+        username : 
+        {
+            key : value
+        }
+    }
+}
