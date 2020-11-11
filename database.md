@@ -2,11 +2,11 @@ Example
 
 # Database
 
-<details>
+<details open>
 
   <summary>10.11.20</summary>
 
-  <details>
+  <details open>
 
     <summary>Asdia_</summary>
     
