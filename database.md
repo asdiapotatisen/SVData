@@ -4,23 +4,21 @@ Example
 
 <details>
 
-  <summary>10.11.20</summary>
-  
   <p>
+
+  <summary>10.11.20</summary>
 
   <details>
 
-    <summary>[tab][space]Asdia_</summary>
+    <summary>Asdia_</summary>
     
-    <p>
 
-[tab][space]| Key | Value |
-[tab][space]| Key1 | Value1 |
+| Key | Value |
+| === | === |
+| Key1 | Value1 |
   
-    </p>
-
   </details>
 
-  </p>
+</p>
 
 </details>
