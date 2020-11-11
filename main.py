@@ -7,7 +7,7 @@ import json
 import tinydb
 import svapi
 
-date = "111120" #ONLY EDIT THIS, DDMMYY
+date = "DDMMYY" #ONLY EDIT THIS
 
 svidcount = 0
 duplicount = 0
