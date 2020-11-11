@@ -10,9 +10,10 @@ Example
 
   <details>
 
+<p>
+
     <summary>Asdia_</summary>
     
-<p> 
 
 | Key | Value |
 | === | === |
