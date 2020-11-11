@@ -4,15 +4,17 @@ from urllib.request import Request, urlopen
 import re
 import os
 import json
+import tinydb
 import svapi
 
-date = "" #ONLY EDIT THIS, DDMMYY
+date = "111120" #ONLY EDIT THIS, DDMMYY
 
 svidcount = 0
 duplicount = 0
 
-finallist = []
-links = []
+# set up lists
+svidlist = []
+svidlist1 = []
 urllist = [
     "https://spookvooper.com/user/search/a", 
     "https://spookvooper.com/user/search/b", 
@@ -52,11 +54,6 @@ urllist = [
     "https://spookvooper.com/user/search/9"
 ]
 
-def removedupli(svid):
-    if svid not in finallist:
-        finallist.append(svid)
-    else:
-        return
 
 for url in urllist:
     req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -68,32 +65,34 @@ for url in urllist:
         linkget = str(link.get('href'))
         if "/User/Info?svid=" in linkget:
             linkget = linkget.replace("/User/Info?svid=", "")
-            links.append(linkget)
+            svidlist1.append(linkget)
             svidcount += 1
             print("Getting SVIDS: ", end='')
-            print(svidcount)
+            print(f"{svidcount} / {url}")
 
-for svid in links:
-    removedupli(svid)
+for svid in svidlist1:
+    if svid not in svidlist:
+        svidlist.append(svid)
     duplicount += 1
     print("Removing duplicate SVIDs: ", end='')
-    print(duplicount)
+    print(f"{duplicount} / {len(svidlist1)}")
 
-finallist.sort()
+svidlist.sort()
 
-os.remove("svidfinal.txt")
+os.remove('svidlist.txt')
 
-with open("svidfinal.txt", 'a') as outfile:
-    json.dump(finallist, outfile, indent=2)
+with open("svidlist.txt", 'a') as outfile:
+    json.dump(svidlist, outfile, indent=2)
 
-with open("database.json") as infile:
-    database = json.load(infile)
 
-database[date] = {}
+db = tinydb.TinyDB("database.json")
+table = db.table(name="SV User Data")
 
-for i in range(0, len(finallist)):
+database = {}
+
+for i in range(0, len(svidlist)):
     try:
-        svid = finallist[i]
+        svid = svidlist[i]
         userdatabasedict = svapi.GetUserDataFromSVID(svid)
         dayssincelastmove = svapi.GetDaysSinceLastMoveFromSVID(svid)
         userdatabasedict["dayssincelastmove"] = dayssincelastmove
@@ -102,15 +101,24 @@ for i in range(0, len(finallist)):
     except json.decoder.JSONDecodeError:
         userdatabasedict["discord_id"] = None
         userdatabasedict["discordroles"] = []
-    
-    username = userdatabasedict["userName"]
-    
-    database[date][username] = userdatabasedict
+
+    try:
+        database[svid][date] = userdatabasedict
+    except KeyError:
+        database[svid] = {}
+        database[svid][date] = userdatabasedict
 
     print("Getting data: ", end='')
-    print(i)
+    print(f"{i} / {len(svidlist)}")
+
+table.insert(database)
+
+db.close()
+
+with open("database.json") as infile:
+    databaseclean = json.load(infile)
 
 os.remove("database.json")
 
 with open("database.json", "a") as outfile:
-    json.dump(database, outfile, indent=2)
+    json.dump(databaseclean, outfile, indent=2)
