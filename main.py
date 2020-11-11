@@ -12,7 +12,15 @@ date = "111120" #ONLY EDIT THIS, DDMMYY
 svidcount = 0
 duplicount = 0
 
-# set up lists
+def jsoncleaner(filename):
+    with open(filename) as infile:
+        jsondirty = json.load(infile)
+
+    os.remove(filename)
+
+    with open(filename, "w") as outfile:
+        json.dump(jsondirty, outfile, indent=2)
+
 svidlist = []
 svidlist1 = []
 urllist = [
@@ -115,10 +123,4 @@ table.insert(database)
 
 db.close()
 
-with open("database.json") as infile:
-    databaseclean = json.load(infile)
-
-os.remove("database.json")
-
-with open("database.json", "a") as outfile:
-    json.dump(databaseclean, outfile, indent=2)
+jsoncleaner("database.json")
