@@ -2,17 +2,17 @@ Example
 
 # Database
 
-<detail>
+<details>
 
   <summary>10.11.20</summary>
 
-  <detail>
+  <details>
 
     <summary>Asdia_</summary>
     
     | Key | Value |
     | Key1 | Value1 |
   
-  </detail>
+  </details>
 
-</detail>
+</details>
