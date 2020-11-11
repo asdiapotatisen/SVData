@@ -10,12 +10,12 @@ Example
 
   <details>
 
-    <summary>Asdia_</summary>
+    <summary>[tab][space]Asdia_</summary>
     
     <p>
 
-    | Key | Value |
-    | Key1 | Value1 |
+[tab][space]| Key | Value |
+[tab][space]| Key1 | Value1 |
   
     </p>
 
