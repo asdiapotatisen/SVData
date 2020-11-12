@@ -5,6 +5,7 @@ with open("database.json") as infile:
 
 key = input("Key: ")
 value = input("Value: ")
+operator = input("Operator: ")
 answer = input("Entry to be retrieved: ")
 dates = input("Date(s): ")
 
@@ -75,31 +76,176 @@ try:
     for svid in database:
         for date in datelist:
             userdata = database[svid][date]
-            if key == "discordrolesid":
-                rolelist = database[svid][date]["discordroles"]
-                for i in range(0, len(rolelist)):
-                    roledict = rolelist[i]
-                    roleid = roledict["id"]
-                    if int(value) == roleid:
+            if operator == "==":
+                if key == "discordrolesid":
+                    rolelist = database[svid][date]["discordroles"]
+                    for i in range(0, len(rolelist)):
+                        roledict = rolelist[i]
+                        roleid = roledict["id"]
+                        try:
+                            int(value)
+                        except KeyError:
+                            if value == str(roleid):
+                                answerreturn(answer)
+                        else:
+                            if int(value) == roleid:
+                                answerreturn(answer)
+                    if len(answerlist) == 0:
+                        raise KeyError
+                elif key == "discordrolesname":
+                    rolelist = database[svid][date]["discordroles"]
+                    for i in range(0, len(rolelist)):
+                        roledict = rolelist[i]
+                        rolename = roledict["name"]
+                        try:
+                            int(value)
+                        except KeyError:
+                            if value == rolename:
+                                answerreturn(answer)
+                        else:
+                            if int(value) == rolename:
+                                answerreturn(answer)
+                    if len(answerlist) == 0:
+                        raise KeyError
+                else:
+                    try:
+                        int(value)
+                    except:
+                        if userdata[key] == value:
+                            answerreturn(answer)
+                    else:
+                        if userdata[key] == int(value):
+                            answerreturn(answer)
+            if operator == "!=":
+                if key == "discordrolesid":
+                    rolelist = database[svid][date]["discordroles"]
+                    for i in range(0, len(rolelist)):
+                        roledict = rolelist[i]
+                        roleid = roledict["id"]
+                        try:
+                            int(value)
+                        except:
+                            if value != str(roleid):
+                                answerreturn(answer)
+                        else:
+                            if int(value) != roleid:
+                                answerreturn(answer)
+                    if len(answerlist) == 0:
+                        raise KeyError
+                elif key == "discordrolesname":
+                    rolelist = database[svid][date]["discordroles"]
+                    for i in range(0, len(rolelist)):
+                        roledict = rolelist[i]
+                        rolename = roledict["name"]
+                        try:
+                            int(value)
+                        except:
+                            if value != rolename:
+                                answerreturn(answer)
+                        else:
+                            if int(value) != rolename:
+                                answerreturn(answer)
+                    if len(answerlist) == 0:
+                        raise KeyError
+                else:
+                    try:
+                        int(value)
+                    except:
+                        if userdata[key] != value:
+                            answerreturn(answer)
+                    else:
+                        if userdata[key] != int(value):
+                            answerreturn(answer)
+            if operator == "<=": # value is smaller than results (yields all results greater than value)
+                if key == "discordrolesid":
+                    rolelist = database[svid][date]["discordroles"]
+                    for i in range(0, len(rolelist)):
+                        roledict = rolelist[i]
+                        roleid = roledict["id"]
+                        try:
+                            int(value)
+                        except:
+                            raise KeyError
+                        else:
+                            if int(value) <= roleid:
+                                answerreturn(answer)
+                    if len(answerlist) == 0:
+                        raise KeyError
+                elif key == "discordrolesname":
+                    pass
+                elif key == "svid":
+                    pass
+                elif key == "username":
+                    pass
+                elif key == "image url":
+                    pass
+                else:
+                    try:
+                        int(value)
+                    except:
+                        raise KeyError
+                    else:
+                        if int(value) <= userdata[key]:
+                            answerreturn(answer)
+            if operator == ">=": # value is greater than result (yields all results smaller than value)
+                if key == "discordrolesid":
+                    rolelist = database[svid][date]["discordroles"]
+                    for i in range(0, len(rolelist)):
+                        roledict = rolelist[i]
+                        roleid = roledict["id"]
+                        try:
+                            int(value)
+                        except:
+                            raise KeyError
+                        else:
+                            if int(value) >= roleid:
+                                answerreturn(answer)
+                    if len(answerlist) == 0:
+                        raise KeyError
+                elif key == "discordrolesname":
+                    pass
+                elif key == "svid":
+                    pass
+                elif key == "username":
+                    pass
+                elif key == "image url":
+                    pass
+                else:
+                    try:
+                        int(value)
+                    except:
+                        raise KeyError
+                    else:
+                        if userdata[key] >= int(value):
+                            answerreturn(answer)
+            if operator == "contains":
+                if key == "discordrolesid":
+                    rolelist = database[svid][date]["discordroles"]
+                    for i in range(0, len(rolelist)):
+                        roledict = rolelist[i]
+                        roleid = roledict["id"]
+                        if str(value) in str(roleid):
+                            answerreturn(answer)
+                    if len(answerlist) == 0:
+                        raise KeyError
+                elif key == "discordrolesname":
+                    rolelist = database[svid][date]["discordroles"]
+                    for i in range(0, len(rolelist)):
+                        roledict = rolelist[i]
+                        rolename = roledict["name"]
+                        if str(value) in str(rolename):
+                            answerreturn(answer)
+                    if len(answerlist) == 0:
+                        raise KeyError
+                else:
+                    if str(value) in str(userdata[key]):
                         answerreturn(answer)
-                if len(answerlist) == 0:
-                    raise KeyError
-            elif key == "discordrolesname":
-                rolelist = database[svid][date]["discordroles"]
-                for i in range(0, len(rolelist)):
-                    roledict = rolelist[i]
-                    roleid = roledict["name"]
-                    if int(value) == roleid:
-                        answerreturn(answer)
-                if len(answerlist) == 0:
-                    raise KeyError
-            else:
-                if userdata[key] == value:
-                    answerreturn(answer)
-                elif userdata[key] == int(value):
-                    answerreturn(answer)
 except KeyError:
-    print("No parameter with inputed value could be found.")
+    print("No parameter with inputted value could be found.")
 else:
-    for i in range(0, len(answerlist)):
-        print(answerlist[i])
+    answerlist.sort()
+    if len(answerlist) == 0:
+        print("No parameter with inputted value could be found.")
+    else:
+        for i in range(0, len(answerlist)):
+            print(answerlist[i])
