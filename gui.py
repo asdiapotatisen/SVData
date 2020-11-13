@@ -128,7 +128,8 @@ def getkey(keyinput):
             
 keylist = ["svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "credits", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name"]
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
-comparelist = ["AND", "OR", "XOR"]
+modelist = ["AND", "OR", "XOR"]
+typelist = ["svid", "discord id" , "twitch id" ,"minecraft id"]
 urllist = [
     "https://spookvooper.com/user/search/a",
     "https://spookvooper.com/user/search/b", 
@@ -355,18 +356,18 @@ while True:
                                         if str(value) in str(userdata[key]):
                                             answerreturn(answer)
                 except KeyError:
-                    print("    No parameter with inputted value could be found.")
+                    print("No result could be found.")
                 else:
                     if len(answerlist) == 0:
-                        print("    No parameter with inputted value could be found.")
+                        print("No result could be found.")
                     else:
                         finalanswerlist = []
                         for answer in answerlist:
                             if answer not in finalanswerlist:
                                 finalanswerlist.append(answer)
-                        print("Results:")
-                        for i in range(0, len(finalanswerlist)):
-                            print(f"    [{i+1}] {finalanswerlist[i]}")   
+                        for answer in finalanswerlist:
+                            print(answer)
+                        print(f"Total {len(finalanswerlist})
                             
             if eventsearch == "search.clear":
                 searchwindow.FindElement("search.box").Update("")
@@ -467,8 +468,9 @@ while True:
         mainwindow.Hide()
         comparelayout = [
         [sg.Text("Compare Menu", size=(15, 5))],
+        [sg.Input("Input type: "), sg.Combo(typelist)],
         [sg.Input("Input 1", size = (145, 25)), sg.Input("Input 2", size = (145, 25))],
-        [sg.Text("Mode: "), sg.Combo(comparelist)],
+        [sg.Text("Mode: "), sg.Combo(modelist)],
         [sg.Text("")],
         [sg.Button("Submit", key = "compare.submit"), sg.Button("Cancel", key="compare.cancel")]
         comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout).finalize()
@@ -481,15 +483,41 @@ while True:
                 mainwindow.maximize()
                 break
             if eventcompare == "compare.submit":
-                input1 = valuecompare[0]
-                input2 = valuecompare[1]
-                mode = valuecompare[2]
+                type = valuecompare[0]
+                input1 = valuecompare[1]
+                input2 = valuecompare[2]
+                mode = valuecompare[3]
+                inputlist1 = []
+                inputlist2 = []
+                if type == "svid":
+                    inputlist1 = input1.split("\n")
+                    inputlist2 = input2.split("\n")
+                if type == "discord id":
+                    templist1 = input1.split("\n")
+                    templist2 = input2.split("\n")
+                    for discordid in templist1:
+                        svid = svapi.GetSVIDFromDiscordID(discordid)
+                        inputlist1.append(svid)
+                    for discordid in templist2:
+                         svid = svapi.GetSVIDFromDiscordID(discordid)
+                         inputlist2.append(svid)
+                # do this repeatedly
+                # may want to seive out None
                 if mode == "AND":
-                
+                    for svid in inputlist1:
+                        if svid in inputlist2:
+                             answerlist.append(svid)
                 if mode == "XOR":
 
                 if mode == "OR":
 
+                if len(answerlist) == 0:
+                    print("No result could be found.")
+                if len(answerlist) > 0:
+                    for answer in answerlist:
+                        print(answer)
+                    print(f"Total: {len(answerlist)}"
+                        
     if eventmain == "main.quit":
         break
 
