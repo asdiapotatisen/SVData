@@ -392,10 +392,7 @@ while True:
                     with open("database.json") as infile:
                         database = json.load(infile)
                 except FileNotFoundError:
-                    with open("database.json", "a") as infile:
-                        infile.write("{}")
-                    with open("database.json") as infile:
-                        database = json.load(infile)
+                    database = {}
 
                 date = datetime.today().strftime('%d-%m-%Y')
 
