@@ -125,7 +125,14 @@ def getkey(keyinput):
         return "discord roles id"
     elif keyformatter == "discord role name":
         return "discord roles name"
-            
+
+def removedupli(inputlist):
+    templist = []
+    for item in inputlist:
+        if item not in templist:
+            templist.append(item)
+    inputlist = templist
+  
 keylist = ["svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "credits", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name"]
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
 modelist = ["AND", "OR", "XOR"]
@@ -361,13 +368,10 @@ while True:
                     if len(answerlist) == 0:
                         print("No result could be found.")
                     else:
-                        finalanswerlist = []
+                        removedupli(answerlist)
                         for answer in answerlist:
-                            if answer not in finalanswerlist:
-                                finalanswerlist.append(answer)
-                        for answer in finalanswerlist:
                             print(answer)
-                        print(f"Total {len(finalanswerlist})
+                        print(f"Total {len(answerlist})
                             
             if eventsearch == "search.clear":
                 searchwindow.FindElement("search.box").Update("")
@@ -397,11 +401,7 @@ while True:
 
                 date = datetime.today().strftime('%d-%m-%Y')
 
-                svidcount = 0
-                duplicount = 0
-
                 svidlist = []
-                svidlist1 = []
                 
                 for url in urllist:
                     req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -413,18 +413,10 @@ while True:
                         linkget = str(link.get('href'))
                         if "/User/Info?svid=" in linkget:
                             linkget = linkget.replace("/User/Info?svid=", "")
-                            svidlist1.append(linkget)
-                            svidcount += 1
-                            print(f"Getting SVIDs: {svidcount}")
-                            getdatawindow.refresh()
+                            svidlist.append(linkget)
                 
-                for svid in svidlist1:
-                    if svid not in svidlist:
-                        svidlist.append(svid)
-                    duplicount += 1
-                    print(f"Removing duplicate SVIDs: {duplicount}, {svidcount-duplicount} SVIDs left")
-                    getdatawindow.refresh()
-                    
+                removedupli(svidlist)
+
                 svidlist.sort()
                 os.remove('svidlist.txt')
                 
@@ -471,6 +463,7 @@ while True:
         [sg.Input("Input type: "), sg.Combo(typelist)],
         [sg.Input("Input 1", size = (145, 25)), sg.Input("Input 2", size = (145, 25))],
         [sg.Text("Mode: "), sg.Combo(modelist)],
+        [sg.Text("Output type: "), sg.Combo(typelist)],
         [sg.Text("")],
         [sg.Button("Submit", key = "compare.submit"), sg.Button("Cancel", key="compare.cancel")]
         comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout).finalize()
@@ -487,6 +480,7 @@ while True:
                 input1 = valuecompare[1]
                 input2 = valuecompare[2]
                 mode = valuecompare[3]
+                outputtype = valuecompare[4]
                 inputlist1 = []
                 inputlist2 = []
                 if type == "svid":
@@ -502,19 +496,31 @@ while True:
                          svid = svapi.GetSVIDFromDiscordID(discordid)
                          inputlist2.append(svid)
                 # do this repeatedly
-                # may want to seive out None
+                # may want to sieve out None
                 if mode == "AND":
                     for svid in inputlist1:
                         if svid in inputlist2:
                              answerlist.append(svid)
                 if mode == "XOR":
-
+                    megalist = inputlist1 + inputlist2
+                    removedupli(megalist)
+                    for svid in megalist:
+                        if svid in inputlist1 and svid in inputlist2:
+                            pass
+                        else:
+                            answerlist.append(svid)
                 if mode == "OR":
-
+                    answerlist = inputlist1 + inputlist2
                 if len(answerlist) == 0:
                     print("No result could be found.")
                 if len(answerlist) > 0:
+                    removedupli(answerlist)
                     for answer in answerlist:
+                        if outputtype == "svid":
+                            pass
+                        if outputtype == "discordid":
+                            answer = svapi.GetDiscordIDFromSVID(svid)
+                        # repeat
                         print(answer)
                     print(f"Total: {len(answerlist)}"
                         
