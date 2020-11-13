@@ -128,7 +128,7 @@ def getkey(keyinput):
             
 keylist = ["svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "credits", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name"]
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
-
+comparelist = ["AND", "OR", "XOR"]
 urllist = [
     "https://spookvooper.com/user/search/a",
     "https://spookvooper.com/user/search/b", 
@@ -169,8 +169,8 @@ urllist = [
 ]
 
 mainlayout = [
-[sg.Text("Main Menu", size = (200, 5))], 
-[sg.Button("Get Data", key = "main.getdata"), sg.Button("Search", key = "main.search"), sg.Button("Quit", key="main.quit")]
+[sg.Text("Main Menu", size = (15, 1))], 
+[sg.Button("Get Data", key = "main.getdata"), sg.Button("Search", key = "main.search"), sg.Button("Compare", key="main.compare"), sg.Button("Quit", key="main.quit")]
 ]
 
 
@@ -182,7 +182,7 @@ while True:
     if eventmain == "main.search":
         mainwindow.Hide()
         searchlayout = [
-        [sg.Text("Search Menu", size = (100,5))],
+        [sg.Text("Search Menu", size = (15, 5))],
         [sg.Multiline(size=(300, 25), auto_refresh=True, autoscroll=True, reroute_stdout=True, key="search.box")], 
         [sg.Text("Search all "), sg.Combo(keylist), sg.Text(" where "), sg.Combo(keylist), sg.Combo(operationlist), sg.Input("value"), sg.Text(" on " ), sg.Input("date")],
         [sg.Text("Date must be in DD-MM-YYYY format.")],
@@ -378,7 +378,7 @@ while True:
     if eventmain == "main.getdata":
         mainwindow.Hide()
         getdatalayout = [
-        [sg.Text("Get Data Menu", size = (100, 5))], 
+        [sg.Text("Get Data Menu", size = (15, 5))], 
         [sg.Multiline(size=(300, 25), auto_refresh=True, autoscroll=True, reroute_stdout=True)], 
         [sg.Text("")],
         [sg.Button("Get Data", key = "getdata.getdata"), sg.Button("Exit", key = "getdata.cancel")]
@@ -463,6 +463,33 @@ while True:
                 mainwindow.UnHide()
                 mainwindow.maximize()
                 break
+    if eventmain == "main.compare":
+        mainwindow.Hide()
+        comparelayout = [
+        [sg.Text("Compare Menu", size=(15, 5))],
+        [sg.Input("Input 1", size = (145, 25)), sg.Input("Input 2", size = (145, 25))],
+        [sg.Text("Mode: "), sg.Combo(comparelist)],
+        [sg.Text("")],
+        [sg.Button("Submit", key = "compare.submit"), sg.Button("Cancel", key="compare.cancel")]
+        comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout).finalize()
+        comparewindow.maximize()
+        while True:
+            eventcompare, valuecompare = comparewindow.read()
+            if eventcompare == "compare.cancel":
+                comparewindow.close()
+                mainwindow.unhide()
+                mainwindow.maximize()
+                break
+            if eventcompare == "compare.submit":
+                input1 = valuecompare[0]
+                input2 = valuecompare[1]
+                mode = valuecompare[2]
+                if mode == "AND":
+                
+                if mode == "XOR":
+
+                if mode == "OR":
+
     if eventmain == "main.quit":
         break
 
