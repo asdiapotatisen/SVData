@@ -1,11 +1,7 @@
 # SVData
 ## Functions
 <details>
-<summary>
- 
-User
-
- </summary>
+<summary>User</summary>
  
 ### Get Data
 Get Data is the most basic mode. It retrieves data by scraping SVIDs from spookvooper.com and then feeds it through the SpookVooper API to get the user data. The process is quite long, taking an average of 10 to 15 minutes. That is why it is recommended you only retrieve data daily, as the information retrieved would be fairly accurate for general searching.
