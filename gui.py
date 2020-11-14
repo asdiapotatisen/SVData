@@ -1,6 +1,5 @@
 import PySimpleGUI as sg
 from bs4 import BeautifulSoup
-import lxml
 from urllib.request import Request, urlopen
 import re
 import os
@@ -63,11 +62,30 @@ def answerreturn(answer):
         answerlist.append(userdata["discord_game_xp"])
     elif answer == "image url":
         answerlist.append(userdata["image_url"])
-    elif answer == "dayssincelastmove":
+    elif answer == "days since last move":
         answerlist.append(userdata["dayssincelastmove"])
-    elif answer == "discordroles":
-        answerlist.append(userdata["discordroles"])
-                
+    elif answer == "discord role id":
+        try:
+            rolelist = userdata["discordroles"]
+            if len(rolelist) > 0:
+                roleidlist = []
+                for i in range(0, len(rolelist)):
+                    roleid = rolelist[i]["id"]
+                    roleidlist.append(roleid)
+            answerlist.append(roleidlist)
+        except:
+            pass
+    elif answer == "discord role name":
+        try:
+            rolelist = userdata["discordroles"]
+            if len(rolelist) > 0:
+                rolenamelist = []
+                for i in range(0, len(rolelist)):
+                    rolename = rolelist[i]["name"]
+                    rolenamelist.append(rolename)
+            answerlist.append(rolenamelist)
+        except:
+            pass
 def getkey(keyinput):
     if keyformatter == "svid":
         return "id"
@@ -131,8 +149,8 @@ def removedupli(inputlist):
     for item in inputlist:
         if item not in templist:
             templist.append(item)
-    inputlist = templist
-  
+    return templist
+
 keylist = ["svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "credits", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name"]
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
 modelist = ["AND", "OR", "XOR"]
@@ -195,6 +213,7 @@ while True:
         [sg.Text("Search all "), sg.Combo(keylist), sg.Text(" where "), sg.Combo(keylist), sg.Combo(operationlist), sg.Input("value"), sg.Text(" on " ), sg.Input("date")],
         [sg.Text("Date must be in DD-MM-YYYY format.")],
         [sg.Text("")],
+        [sg.Checkbox("Filter out blank responses")],
         [sg.Button("Submit", key = "search.submit"), sg.Button("Clear Log", key="search.clear"), sg.Button("Cancel", key = "search.cancel")]
         ]
         searchwindow = sg.Window("SV User Data: Search", layout=searchlayout).finalize()
@@ -207,6 +226,7 @@ while True:
                 operator = valuesearch[2]
                 value = valuesearch[3]
                 date = valuesearch[4]
+                filterblank = valuesearch[5]
                 
                 key = getkey(keyformatter)
 
@@ -368,10 +388,21 @@ while True:
                     if len(answerlist) == 0:
                         print("No result could be found.")
                     else:
-                        removedupli(answerlist)
+                        answerlist = removedupli(answerlist)
+                        blankcount = 0
                         for answer in answerlist:
-                            print(answer)
-                        print(f"Total {len(answerlist})
+                            if filterblank == True:
+                                if answer is not None:
+                                    print(answer)
+                                else:
+                                    blankcount += 1
+                            else:
+                                print(answer)
+                        print("")
+                        print(f"{len(answerlist)} results")
+                        if filterblank == True:
+                            print(f"{blankcount} were blank")
+                        print("---")
                             
             if eventsearch == "search.clear":
                 searchwindow.FindElement("search.box").Update("")
@@ -398,31 +429,35 @@ while True:
                         database = json.load(infile)
                 except FileNotFoundError:
                     database = {}
-
                 date = datetime.today().strftime('%d-%m-%Y')
-
                 svidlist = []
                 
+                svidcount = 0
+                
+                
                 for url in urllist:
-                    req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+                    req = Request(url, headers={'User-Agent': 'Mozilla/4.0'})
                     html_page = urlopen(req)
-
-                    soup = BeautifulSoup(html_page, "lxml")
-                    
+                    soup = BeautifulSoup(html_page, "html.parser")
                     for link in soup.findAll('a'):
                         linkget = str(link.get('href'))
                         if "/User/Info?svid=" in linkget:
                             linkget = linkget.replace("/User/Info?svid=", "")
                             svidlist.append(linkget)
+                            svidcount += 1
+                            url = url.replace('https://spookvooper.com/user/search/', '')
+                            print(f"Getting SVIDs       {svidcount}     {url}")
                 
-                removedupli(svidlist)
-
+                print("Removing duplicate SVIDs")
+                svidlist = removedupli(svidlist)
+                
                 svidlist.sort()
                 os.remove('svidlist.txt')
                 
                 with open("svidlist.txt", 'a') as outfile:
                     json.dump(svidlist, outfile, indent=2)
-                                
+
+                usercount = 0
                 for i in range(0, len(svidlist)):
                     try:
                         svid = svidlist[i]
@@ -435,8 +470,6 @@ while True:
                         userdatabasedict["discord_id"] = None
                         userdatabasedict["discordroles"] = []
                     
-                    print(f"Getting user data: {i+1}, {len(svidlist)-(i+1)} SVIDs left")
-                    
                     todaysdata = {date:userdatabasedict}
                     
                     try:
@@ -444,8 +477,15 @@ while True:
                     except KeyError:
                         database[svid] = []
                         database[svid].append(todaysdata)
-                        
-                os.remove("database.json")
+                    
+                    usercount += 1
+                    
+                    print(f"Getting User Data           {usercount}     out of {len(svidlist)}")
+                
+                try:
+                    os.remove("database.json")
+                except:
+                    pass
                 
                 with open("database.json", 'a') as outfile:
                     json.dump(database, outfile, indent=2)
@@ -460,50 +500,125 @@ while True:
         mainwindow.Hide()
         comparelayout = [
         [sg.Text("Compare Menu", size=(15, 5))],
-        [sg.Input("Input type: "), sg.Combo(typelist)],
-        [sg.Input("Input 1", size = (145, 25)), sg.Input("Input 2", size = (145, 25))],
+        [sg.Text("Input type: "), sg.Combo(typelist)],
+        [sg.Multiline("Input 1", size = (90, 12)), sg.Multiline("Input 2", size = (90, 12))],
         [sg.Text("Mode: "), sg.Combo(modelist)],
         [sg.Text("Output type: "), sg.Combo(typelist)],
+        [sg.Checkbox("Filter out blank responses", default=True)],
+        [sg.Multiline("Output", size=(200, 12), key="compare.output", auto_refresh=True, autoscroll=True, reroute_stdout=True)],
         [sg.Text("")],
         [sg.Button("Submit", key = "compare.submit"), sg.Button("Cancel", key="compare.cancel")]
+        ]
         comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout).finalize()
         comparewindow.maximize()
         while True:
             eventcompare, valuecompare = comparewindow.read()
             if eventcompare == "compare.cancel":
                 comparewindow.close()
-                mainwindow.unhide()
-                mainwindow.maximize()
+                mainwindow.UnHide()
+                mainwindow.Maximize()
                 break
             if eventcompare == "compare.submit":
-                type = valuecompare[0]
+                intype = valuecompare[0]
                 input1 = valuecompare[1]
                 input2 = valuecompare[2]
                 mode = valuecompare[3]
                 outputtype = valuecompare[4]
                 inputlist1 = []
                 inputlist2 = []
-                if type == "svid":
-                    inputlist1 = input1.split("\n")
-                    inputlist2 = input2.split("\n")
-                if type == "discord id":
-                    templist1 = input1.split("\n")
-                    templist2 = input2.split("\n")
-                    for discordid in templist1:
-                        svid = svapi.GetSVIDFromDiscordID(discordid)
-                        inputlist1.append(svid)
-                    for discordid in templist2:
-                         svid = svapi.GetSVIDFromDiscordID(discordid)
-                         inputlist2.append(svid)
-                # do this repeatedly
-                # may want to sieve out None
+                
+                answerlist = []
+
+                with open("database.json") as infile:
+                    database = json.load(infile)
+
+                inputlist111 = input1.split("\n")
+                inputlist211 = input2.split("\n")
+                
+                inputlist11 = []
+                inputlist21 = []
+                
+                for item in inputlist111:
+                    if item == '':
+                        pass
+                    else:
+                        inputlist11.append(item)
+
+                for item in inputlist211:
+                    if item == '':
+                        pass
+                    else:
+                        inputlist21.append(item)
+                        
+                if intype == "svid":
+                    for svid in inputlist11:
+                        if svid != "None":
+                            inputlist1.append(svid)
+                    for svid in inputlist21:
+                        if svid != "None":
+                            inputlist2.append(svid)
+                                
+                if intype == "discord id":
+                    for discordid in inputlist11:
+                        if discordid != "None":
+                            try:
+                                svid = svapi.GetSVIDFromDiscord(discordid)
+                                inputlist1.append(svid)
+                            except:
+                                pass
+                    for discordid in inputlist21:
+                        if discordid != "None":
+                            try:
+                                svid = svapi.GetSVIDFromDiscord(discordid)
+                                inputlist2.append(svid)
+                            except:
+                                pass
+                                
+                if intype == "minecraft id":
+                    for minecraftid in inputlist11:
+                        if minecraftid != "None":
+                            try:
+                                svid = svapi.GetSVIDFromMinecraft(minecraftid)
+                                inputlist1.append(svid)
+                            except:
+                                pass
+                    for minecraftid in inputlist21:
+                        if minecraftid != "None":
+                            try:
+                                svid = svapi.GetSVIDFromMinecraft(minecraftid)
+                                inputlist2.append(svid)
+                            except:
+                                pass
+
+                if intype == "twitch id":
+                    for svid in database:
+                        numberofdates = len(database[svid])
+                        date = list(database[svid][numberofdates-1].keys())[0]
+                        userdata = database[svid][numberofdates-1][date]
+                    for twitchid in inputlist11:
+                        if twitchid != "None":
+                            if userdata["twitch_id"] == twitchid:
+                                try:
+                                    svid = userdata["id"]
+                                    inputlist1.append(svid)
+                                except:
+                                    pass
+                    for twitchid in inputlist21:
+                        if twitchid != "None":
+                            if userdata["twitch_id"] == twitchid:
+                                try:
+                                    svid = userdata["id"]
+                                    inputlist2.append(svid)
+                                except:
+                                    pass
+
                 if mode == "AND":
                     for svid in inputlist1:
                         if svid in inputlist2:
-                             answerlist.append(svid)
+                            answerlist.append(svid)
                 if mode == "XOR":
                     megalist = inputlist1 + inputlist2
-                    removedupli(megalist)
+                    megalist = removedupli(megalist)
                     for svid in megalist:
                         if svid in inputlist1 and svid in inputlist2:
                             pass
@@ -511,19 +626,43 @@ while True:
                             answerlist.append(svid)
                 if mode == "OR":
                     answerlist = inputlist1 + inputlist2
-                if len(answerlist) == 0:
+                
+                with open("database.json") as infile:
+                    database = json.load(infile)
+                
+                answerlistfinal = []
+                
+                for svid in answerlist:
+                    numberofdates = len(database[svid])
+                    date = list(database[svid][numberofdates-1].keys())[0]
+                    userdata = database[svid][numberofdates-1][date]
+                    
+                    if outputtype == "svid":
+                        answerlistfinal.append(svid)
+                    if outputtype == "discord id":
+                        answerlistfinal.append(svapi.GetDiscordIdFromSVID(svid))
+                    if outputtype == "minecraft id":
+                        if userdata["minecraft_id"] == None:
+                            answerlistfinal.append("None")
+                        else:
+                            answerlistfinal.append(userdata["minecraft_id"])
+                    if outputtype == "twitch id":
+                        if userdata["twitch_id"] == None:
+                            answerlistfinal.append("None")
+                        else:
+                            answerlistfinal.append(userdata["twitch_id"])              
+
+                comparewindow["compare.output"].update("")
+                if len(answerlistfinal) == 0:
                     print("No result could be found.")
-                if len(answerlist) > 0:
-                    removedupli(answerlist)
-                    for answer in answerlist:
-                        if outputtype == "svid":
-                            pass
-                        if outputtype == "discordid":
-                            answer = svapi.GetDiscordIDFromSVID(svid)
-                        # repeat
+                if len(answerlistfinal) > 0:
+                    answerlistfinal = removedupli(answerlistfinal)
+                    for answer in answerlistfinal:
                         print(answer)
-                    print(f"Total: {len(answerlist)}"
-                        
+                    print("")
+                    print(f"{len(answerlistfinal)} results")
+                print("---")
+                
     if eventmain == "main.quit":
         break
 
