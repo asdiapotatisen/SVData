@@ -23,42 +23,44 @@ For example, "Find all [username] such that [credits] [is less than] [100000] on
 ### Compare
 Compare is used to get a list from two lists, based on your mode (operation). There are 3 inputs:
 
-* input type
-* mode (operation)
+* Input type
+  * Type of your two inputs
+  * Both inputs must be the same
+* Mode (operation)
+  * Input filter
+  * AND
+    * Returns a list of elements such that all elements can be found in both input lists
+
+    | Input 1 | Input 2 | Output |
+    | --- | --- | --- |
+    |     0     |     0     |     0     |
+    |     1     |     0     |     0     |
+    |     0     |     1     |     0     |
+    |     1     |     1     |     1     |
+
+  * OR
+    * Returns a list of elements such that all elements can be found in at least one input list
+
+    | Input 1 | Input 2 | Output |
+    | --- | --- | --- |
+    |     0     |     0     |     0     |
+    |     1     |     0     |     1     |
+    |     0     |     1     |     1     |
+    |     1     |     1     |     1     |
+
+  * XOR
+    * Returns a list of elements such that all elements can only be found in exactly one input list
+
+    | Input 1 | Input 2 | Output |
+    | --- | --- | --- |
+    |     0     |     0     |     0     |
+    |     1     |     0     |     1     |
+    |     0     |     1     |     1     |
+    |     1     |     1     |     0     |
+
 * output type
+  * Type you want the output to be
 
-Input type is the type of your two inputs; both inputs must be the same. 
-
-Mode (operation) is how you want to filter both lists. There are 3 modes: AND, OR and XOR.
-
-AND returns a list of elements such that all elements can be found in both input lists.
-
-| Input 1 | Input 2 | Output |
-| --- | --- | --- |
-|     0     |     0     |     0     |
-|     1     |     0     |     0     |
-|     0     |     1     |     0     |
-|     1     |     1     |     1     |
-
-OR returns a list of elements such that all elements can be found in at least one input list.
-
-| Input 1 | Input 2 | Output |
-| --- | --- | --- |
-|     0     |     0     |     0     |
-|     1     |     0     |     1     |
-|     0     |     1     |     1     |
-|     1     |     1     |     1     |
-
-XOR returns a list of elements such that all elements can only be found in exactly one input list.
-
-| Input 1 | Input 2 | Output |
-| --- | --- | --- |
-|     0     |     0     |     0     |
-|     1     |     0     |     1     |
-|     0     |     1     |     1     |
-|     1     |     1     |     0     |
-        
-Output type is the type you want the output to be.
 ## Future Updates
 * Formatting
 * Save searches as text files, use in Compare
