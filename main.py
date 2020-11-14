@@ -258,8 +258,7 @@ while True:
         searchlayout = [
         [sg.Text("Search Menu", size = (15, 5))],
         [sg.Multiline(size=(300, 25), auto_refresh=True, autoscroll=True, reroute_stdout=True, key="search.box")], 
-        [sg.Text("Search all "), sg.Combo(keylist, default_value="svid"), sg.Text(" where "), sg.Combo(keylist, default_value="username"), sg.Combo(operationlist, default_value="is"), sg.Input("value"), sg.Text(" on " ), sg.Input("date")],
-        [sg.Text("Date must be in DD-MM-YYYY format.")],
+        [sg.Text("Search all "), sg.Combo(keylist, default_value="svid"), sg.Text(" where "), sg.Combo(keylist, default_value="username"), sg.Combo(operationlist, default_value="is"), sg.Input("value", size=(40, 1)), sg.Text(" on " ), sg.Text("date", key="search.date", size=(8, 1)), sg.Text(""), sg.CalendarButton('Choose date', target="search.date", format="%d-%m-%Y")],
         [sg.Text("")],
         [sg.Checkbox("Filter out blank responses", default=True)],
         [sg.Button("Submit", key = "search.submit"), sg.Button("Clear Log", key="search.clear"), sg.Button("Cancel", key = "search.cancel")]
@@ -273,8 +272,8 @@ while True:
                 keyformatter = valuesearch[1]
                 operator = valuesearch[2]
                 value = valuesearch[3]
-                date = valuesearch[4]
-                filterblank = valuesearch[5]
+                date = searchwindow["search.date"].get()
+                filterblank = valuesearch[4]
                 
                 key = getkey(keyformatter)
 
@@ -465,7 +464,7 @@ while True:
         [sg.Text("Get Data Menu", size = (15, 5))], 
         [sg.Multiline(size=(300, 25), auto_refresh=True, autoscroll=True, reroute_stdout=True)], 
         [sg.Text("")],
-        [sg.Button("Get Data", key = "getdata.getdata"), sg.Button("Exit", key = "getdata.cancel")]
+        [sg.Button("Get Data", key = "getdata.getdata"), sg.Button("Cancel", key = "getdata.cancel")]
         ]
         getdatawindow = sg.Window("SV User Data: Get Data", layout=getdatalayout).finalize()
         getdatawindow.maximize()
@@ -477,7 +476,7 @@ while True:
                         database = json.load(infile)
                 except FileNotFoundError:
                     database = {}
-                date = datetime.today().strftime('%d-%m-%Y')
+                date = datetime.today().strftime('%Y-%m-%d')
                 svidlist = []
                 
                 svidcount = 0
