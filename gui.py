@@ -5,9 +5,54 @@ import re
 import os
 import json
 from datetime import datetime
-import svapi
+import requests
 
-sg.theme("Mono Green")
+s = requests.Session()
+s.trust_env = False
+
+def GetSVIDFromMinecraft(minecraftid):
+    result = s.get(f"https://api.spookvooper.com/User/GetSVIDFromMinecraft?minecraftid={minecraftid}").text
+    if "Could not find" in result:
+        raise Exception("GetSVIDFromMinecraft: Param(s) are invalid.")
+    else:
+        return result
+
+def GetUserDataFromSVID(svid):
+    result = s.get(f"https://api.spookvooper.com/User/GetUser?SVID={svid}").text
+    if "Could not find" in result:
+        raise Exception("GetUser: Param(s) are invalid.")
+    else:
+        return json.loads(result)
+
+def GetDiscordIdFromSVID(svid):
+    result = s.get(f"https://api.spookvooper.com/User/GetUser?SVID={svid}").text
+    if "Could not find" in result:
+        raise Exception("GetDiscordRolesFromSVID: Param(s) are invalid.")
+    else:
+        data = json.loads(result)
+        discordid = data["discord_id"]
+        return discordid
+
+def GetSVIDFromDiscord(discordid):
+    result = s.get(f"https://api.spookvooper.com/User/GetSVIDFromDiscord?discordid={discordid}").text
+    if "Could not find" in result:
+        raise Exception("GetSVIDFromDiscord: Param(s) are invalid.")
+    else:
+        return result
+
+def GetDaysSinceLastMoveFromSVID(svid):
+    result = s.get(f"https://api.spookvooper.com/User/GetDaysSinceLastMove?SVID={svid}").text
+    if "Could not find" in result:
+        raise Exception("GetDaysSinceLastMoveFromSVID: Param(s) are invalid.")
+    else:
+        return json.loads(result)
+
+def GetDiscordRolesFromSVID(svid):
+    result = s.get(f"https://api.spookvooper.com/User/GetDiscordRoles?SVID={svid}").text
+    if "Could not find" in result:
+        raise Exception("GetDiscordRolesFromSVID: Param(s) are invalid.")
+    else:
+        return json.loads(result)
 
 def answerreturn(answer):
     if answer == "svid":
@@ -151,6 +196,7 @@ def removedupli(inputlist):
             templist.append(item)
     return templist
 
+helplist = ["Get Data", "Search", "Compare"]
 keylist = ["svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "credits", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name"]
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
 modelist = ["AND", "OR", "XOR"]
@@ -194,9 +240,11 @@ urllist = [
     "https://spookvooper.com/user/search/9"
 ]
 
+sg.theme("Mono Green")
+
 mainlayout = [
 [sg.Text("Main Menu", size = (15, 1))], 
-[sg.Button("Get Data", key = "main.getdata"), sg.Button("Search", key = "main.search"), sg.Button("Compare", key="main.compare"), sg.Button("Quit", key="main.quit")]
+[sg.Button("Get Data", key = "main.getdata"), sg.Button("Search", key = "main.search"), sg.Button("Compare", key="main.compare"), sg.Button("Help", key="main.help"), sg.Button("Quit", key="main.quit")]
 ]
 
 
@@ -210,10 +258,10 @@ while True:
         searchlayout = [
         [sg.Text("Search Menu", size = (15, 5))],
         [sg.Multiline(size=(300, 25), auto_refresh=True, autoscroll=True, reroute_stdout=True, key="search.box")], 
-        [sg.Text("Search all "), sg.Combo(keylist), sg.Text(" where "), sg.Combo(keylist), sg.Combo(operationlist), sg.Input("value"), sg.Text(" on " ), sg.Input("date")],
+        [sg.Text("Search all "), sg.Combo(keylist, default_value="svid"), sg.Text(" where "), sg.Combo(keylist, default_value="username"), sg.Combo(operationlist, default_value="is"), sg.Input("value"), sg.Text(" on " ), sg.Input("date")],
         [sg.Text("Date must be in DD-MM-YYYY format.")],
         [sg.Text("")],
-        [sg.Checkbox("Filter out blank responses")],
+        [sg.Checkbox("Filter out blank responses", default=True)],
         [sg.Button("Submit", key = "search.submit"), sg.Button("Clear Log", key="search.clear"), sg.Button("Cancel", key = "search.cancel")]
         ]
         searchwindow = sg.Window("SV User Data: Search", layout=searchlayout).finalize()
@@ -452,7 +500,10 @@ while True:
                 svidlist = removedupli(svidlist)
                 
                 svidlist.sort()
-                os.remove('svidlist.txt')
+                try:
+                    os.remove('svidlist.txt')
+                except:
+                    pass
                 
                 with open("svidlist.txt", 'a') as outfile:
                     json.dump(svidlist, outfile, indent=2)
@@ -461,10 +512,10 @@ while True:
                 for i in range(0, len(svidlist)):
                     try:
                         svid = svidlist[i]
-                        userdatabasedict = svapi.GetUserDataFromSVID(svid)
-                        dayssincelastmove = svapi.GetDaysSinceLastMoveFromSVID(svid)
+                        userdatabasedict = GetUserDataFromSVID(svid)
+                        dayssincelastmove = GetDaysSinceLastMoveFromSVID(svid)
                         userdatabasedict["dayssincelastmove"] = dayssincelastmove
-                        rolelist = svapi.GetDiscordRolesFromSVID(svid)
+                        rolelist = GetDiscordRolesFromSVID(svid)
                         userdatabasedict["discordroles"] = rolelist
                     except json.decoder.JSONDecodeError:
                         userdatabasedict["discord_id"] = None
@@ -500,11 +551,10 @@ while True:
         mainwindow.Hide()
         comparelayout = [
         [sg.Text("Compare Menu", size=(15, 5))],
-        [sg.Text("Input type: "), sg.Combo(typelist)],
+        [sg.Text("Input type: "), sg.Combo(typelist, default_value="svid")],
         [sg.Multiline("Input 1", size = (90, 12)), sg.Multiline("Input 2", size = (90, 12))],
-        [sg.Text("Mode: "), sg.Combo(modelist)],
-        [sg.Text("Output type: "), sg.Combo(typelist)],
-        [sg.Checkbox("Filter out blank responses", default=True)],
+        [sg.Text("Mode: "), sg.Combo(modelist, default_value="AND")],
+        [sg.Text("Output type: "), sg.Combo(typelist, default_value="svid")],
         [sg.Multiline("Output", size=(200, 12), key="compare.output", auto_refresh=True, autoscroll=True, reroute_stdout=True)],
         [sg.Text("")],
         [sg.Button("Submit", key = "compare.submit"), sg.Button("Cancel", key="compare.cancel")]
@@ -562,14 +612,14 @@ while True:
                     for discordid in inputlist11:
                         if discordid != "None":
                             try:
-                                svid = svapi.GetSVIDFromDiscord(discordid)
+                                svid = GetSVIDFromDiscord(discordid)
                                 inputlist1.append(svid)
                             except:
                                 pass
                     for discordid in inputlist21:
                         if discordid != "None":
                             try:
-                                svid = svapi.GetSVIDFromDiscord(discordid)
+                                svid = GetSVIDFromDiscord(discordid)
                                 inputlist2.append(svid)
                             except:
                                 pass
@@ -578,14 +628,14 @@ while True:
                     for minecraftid in inputlist11:
                         if minecraftid != "None":
                             try:
-                                svid = svapi.GetSVIDFromMinecraft(minecraftid)
+                                svid = GetSVIDFromMinecraft(minecraftid)
                                 inputlist1.append(svid)
                             except:
                                 pass
                     for minecraftid in inputlist21:
                         if minecraftid != "None":
                             try:
-                                svid = svapi.GetSVIDFromMinecraft(minecraftid)
+                                svid = GetSVIDFromMinecraft(minecraftid)
                                 inputlist2.append(svid)
                             except:
                                 pass
@@ -640,7 +690,7 @@ while True:
                     if outputtype == "svid":
                         answerlistfinal.append(svid)
                     if outputtype == "discord id":
-                        answerlistfinal.append(svapi.GetDiscordIdFromSVID(svid))
+                        answerlistfinal.append(GetDiscordIdFromSVID(svid))
                     if outputtype == "minecraft id":
                         if userdata["minecraft_id"] == None:
                             answerlistfinal.append("None")
@@ -662,7 +712,85 @@ while True:
                     print("")
                     print(f"{len(answerlistfinal)} results")
                 print("---")
-                
+    if eventmain == "main.help":
+        mainwindow.Hide()
+        helplayout = [
+            [sg.Text("Help Menu", size=(15, 5))],
+            [sg.Text("Select a mode to learn more about it: "), sg.Combo(helplist, default_value="Get Data")],
+            [sg.Multiline("", size=(300, 12), key="help.output")],
+            [sg.Text("")],
+            [sg.Button("Submit", key="help.submit"),sg.Button("Cancel", key="help.cancel")]
+        ]
+        helpwindow = sg.Window("SV User Data: Help", layout=helplayout).finalize()
+        helpwindow.maximize()
+        while True:
+            eventhelp, valuehelp = helpwindow.read()
+            if eventhelp == "help.submit":
+                mode = valuehelp[0]
+                if mode == "Get Data":
+                    content = """Get Data is the most basic mode. It retrieves data by scraping SVIDs from spookvooper.com and then feeds it through the SpookVooper API to get the user data. The process is quite long, taking an average of 10 to 15 minutes. That is why it is recommended you only retrieve data daily, as the information retrieved would be fairly accurate for general searching.
+
+Do take note that two files, database.json and svidlist.txt, will be created in the same directory as where the .exe file is. Do NOT delete database.json as the other modes rely on it to function. svidlist.txt is just there so you can easily access a list of SVIDs should you need it."""
+                    helpwindow["help.output"].update(content)
+                if mode == "Search":
+                    content = """Search is by far the most useful mode. It searches through database.json and finds all suitable results based on your 6 inputs: 
+* output type
+* key
+* operation
+* value
+* date
+* filter (True by default)
+
+These inputs can be put into the following sentence:
+
+Find all [output type] such that [key] [operator] [value] on [date (DD-MM-YYYY)].
+
+For example, "Find all [username] such that [credits] [is less than] [100000] on [14-11-2020].
+"""
+                    helpwindow["help.output"].update(content)
+                if mode == "Compare":
+                    content = """Compare is used to get a list from two lists, based on your mode (operation). There are 3 inputs:
+
+* input type
+* mode (operation)
+* output type
+
+Input type is the type of your two inputs; both inputs must be the same. 
+
+Mode (operation) is how you want to filter both lists. There are 3 modes: AND, OR and XOR.
+
+    AND returns a list of elements such that all elements can be found in both input lists.
+    
+        | Input 1 | Input 2 | Output |
+        |     0     |     0     |     0     |
+        |     1     |     0     |     0     |
+        |     0     |     1     |     0     |
+        |     1     |     1     |     1     |
+
+    OR returns a list of elements such that all elements can be found in at least one input list.
+
+        | Input 1 | Input 2 | Output |
+        |     0     |     0     |     0     |
+        |     1     |     0     |     1     |
+        |     0     |     1     |     1     |
+        |     1     |     1     |     1     |
+
+    XOR returns a list of elements such that all elements can only be found in exactly one input list.
+
+        | Input 1 | Input 2 | Output |
+        |     0     |     0     |     0     |
+        |     1     |     0     |     1     |
+        |     0     |     1     |     1     |
+        |     1     |     1     |     0     |
+        
+Output type is the type you want the output to be.
+"""
+                    helpwindow["help.output"].update(content)
+            if eventhelp == "help.cancel":
+                helpwindow.close()
+                mainwindow.UnHide()
+                mainwindow.maximize()
+                break
     if eventmain == "main.quit":
         break
 
