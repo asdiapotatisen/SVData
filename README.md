@@ -58,7 +58,7 @@ Compare is used to get a list from two lists, based on your mode (operation). Th
     |     0     |     1     |     1     |
     |     1     |     1     |     0     |
 
-* output type
+* Output type
   * Type you want the output to be
 
 ## Future Updates
