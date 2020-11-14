@@ -60,6 +60,7 @@ XOR returns a list of elements such that all elements can only be found in exact
         
 Output type is the type you want the output to be.
 ## Future Updates
+* Formatting
 * Save searches as text files, use in Compare
 * Add multiple search fields at once
 * Regex query for values
