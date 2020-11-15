@@ -550,7 +550,7 @@ while True:
         [sg.Text("Get Data", size=(30, 1), justification="center", font=("Courier New", 24))], 
         [sg.Multiline(size=(100, 12), auto_refresh=True, autoscroll=True, reroute_stdout=True, font=("Courier New", 10))], 
         [sg.Text("")],
-        [sg.Check("Create svid.txt", default=True)],
+        [sg.Check("Create svid.txt", default=True, font=("Courier New", 10))],
         [sg.Button("Get Data", key = "getdata.getdata", font=("Courier New", 10)), sg.Button("Cancel", key = "getdata.cancel", font=("Courier New", 10))]
         ]
         getdatawindow = sg.Window("SV User Data: Get Data", layout=getdatalayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
