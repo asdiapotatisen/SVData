@@ -64,8 +64,3 @@ Compare is used to get a list from two lists, based on your mode (operation). Th
 * Output type
   * Type you want the output to be
 </details>
-
-## Future Updates
-* Formatting
-* Save searches as text files, use in Compare
-* Regex query for values
