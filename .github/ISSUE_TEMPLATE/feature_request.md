@@ -14,7 +14,10 @@ A clear and concise description of what the problem is. Ex. I'm always frustrate
 A clear and concise description of what you want to happen.
 
 **Which Menus would you want to see this change be implemented in?**
-A clear and concise list of menus that the solution will be implemented in.
+[  ] Get Data Menu
+[  ] Search Menu
+[  ] Compare Menu
+[  ] Help and Feedback Menu
 
 **Describe alternatives you've considered**
 A clear and concise description of any alternative solutions or features you've considered.
