@@ -10,6 +10,12 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
+**Which Menu(s) does this bug affect?**
+- [ ] Get Data Menu<br>
+- [ ] Search Menu<br>
+- [ ] Compare Menu<br>
+- [ ] Help and Feedback Menu
+
 **To Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
