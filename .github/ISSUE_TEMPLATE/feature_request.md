@@ -13,7 +13,7 @@ A clear and concise description of what the problem is. Ex. I'm always frustrate
 **Describe the solution you'd like**
 A clear and concise description of what you want to happen.
 
-**Which Menus would you want to see this change be implemented in?**
+**Which Menu(s) would you want to see this change be implemented in?**
 - [ ] Get Data Menu<br>
 - [ ] Search Menu<br>
 - [ ] Compare Menu<br>
