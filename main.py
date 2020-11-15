@@ -9,7 +9,7 @@ import svapi
 import webbrowser
 
 def answerreturn(answer):
-    if answer == "svid":
+    if answer == "user svid":
         answerlist.append(svid)
     elif answer == "username":
         answerlist.append(userdata["userName"])
@@ -85,9 +85,17 @@ def answerreturn(answer):
             answerlist.append(rolenamelist)
         except:
             pass
+    elif answer == "group id":
+        answerlist.append(userdata["id"])
+    elif answer == "group name":
+        answerlist.append(userdata["name"])
+    elif answer == "group member":
+        answerlist.append(userdata["members"])
+    elif answer == "group balance":
+        answerlist.append(userdata["balance"])
 
 def getkey(keyinput):
-    if keyformatter == "svid":
+    if keyformatter == "user svid":
         return "id"
     elif keyformatter == "username":
         return "userName"
@@ -103,7 +111,7 @@ def getkey(keyinput):
         return "nationstate"
     elif keyformatter == "description":
         return "description"
-    elif keyformatter == "credits":
+    elif keyformatter == "user balance":
         return "credits"
     elif keyformatter == "api use count":
         return "api_use_count"
@@ -143,6 +151,14 @@ def getkey(keyinput):
         return "discord roles id"
     elif keyformatter == "discord role name":
         return "discord roles name"
+    elif keyformatter == "group id":
+        return "id"
+    elif keyformatter == "group name":
+        return "name"
+    elif keyformatter == "group member":
+        return "member"
+    elif keyformatter == "group balance":
+        return "balance"
 
 def removedupli(inputlist):
     templist = []
@@ -153,7 +169,7 @@ def removedupli(inputlist):
 
 helplist = ["Get Data", "Search", "Compare"]
 keylistgroup = ["group svid", "group name" , "group name", "group members", "group permission"]
-keylist = ["user svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "credits", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name"]
+keylist = ["user svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "user balance", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name", "group id", "group name", "group member", "group balance"]
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
 modelist = ["AND", "OR", "XOR"]
 typelist = ["user svid", "username", "discord id" , "twitch id" ,"minecraft id", "group svid", "group name"]
@@ -253,8 +269,8 @@ while True:
         searchlayout = [
         [sg.Text("Search", size=(30, 1), justification="center", font=("Courier New", 24))], 
         [sg.Multiline(size=(100, 12), auto_refresh=True, autoscroll=True, reroute_stdout=True, key="search.box")], 
-        [sg.Text("Search all ", font=("Courier New", 10)), sg.Combo(keylist, default_value="svid", font=("Courier New", 10)), sg.Text(" where ", font=("Courier New", 10)), sg.Combo(keylist, default_value="username", font=("Courier New", 10)), sg.Combo(operationlist, default_value="is", font=("Courier New", 10))],
-        [sg.Input("value", size=(10, 1), font=("Courier New", 10)), sg.Text(" on ", font=("Courier New", 10)), sg.Text("date", key="search.date", size=(8, 1), font=("Courier New", 10))],
+        [sg.Text("Search all ", font=("Courier New", 10)), sg.Combo(keylist, default_value="user svid", font=("Courier New", 10)), sg.Text(" where ", font=("Courier New", 10)), sg.Combo(keylist, default_value="username", font=("Courier New", 10)), sg.Combo(operationlist, default_value="is", font=("Courier New", 10))],
+        [sg.Input("Asdia_", size=(10, 1), font=("Courier New", 10)), sg.Text(" on ", font=("Courier New", 10)), sg.Text(f"{datetime.today().strftime('%Y-%m-%d')}", key="search.date", size=(8, 1), font=("Courier New", 10))],
         [sg.CalendarButton('Choose date', font=("Courier New", 10), target="search.date", format="%d-%m-%Y")],
         [sg.Text("")],
         [sg.Checkbox("Filter out blank responses", default=True, font=("Courier New", 10))],
@@ -283,169 +299,245 @@ while True:
                         database = json.load(infile)
                 
                 answerlist = []
-                try:
-                    for svid in database:
-                        userdatalist = database[svid] #list
-                        for e in range(0, len(userdatalist)):
-                            userdatakey = list(userdatalist[e].keys())
-                            if userdatakey[0] == date:
-                                userdata = userdatalist[e][date]
+                
+                for svid in database:
+                    userdatalist = database[svid] #list
+                    for e in range(0, len(userdatalist)):
+                        userdatakey = list(userdatalist[e].keys())
+                        if userdatakey[0] == date:
+                            userdata = userdatalist[e][date]
+                            try:
+                                userdata["credits"]
+                            except KeyError: # group
+                                svidtype = "group"
+                            else: # user
+                                svidtype = "user"
+                
+                            try:
                                 if value == "null":
                                     value == None
-                                if operator == "is":
-                                    if key == "discord roles id":
-                                        rolelist = userdata["discordroles"]
-                                        if len(rolelist) > 0:
-                                            for i in range(0, len(rolelist)):
-                                                roleid = rolelist[i]["id"]
+                                if svidtype == "group":
+                                    if operator == "is":
+                                        if key == "members":
+                                            memlist = userdata["members"]
+                                            memlistval = value.split(", ")
+                                            if memlist == memlistval:
+                                                answerreturn(answer)
+                                        else:
+                                            if value == None:
+                                                if userdata[key] == None:
+                                                    answerreturn(answer)
+                                            else:
                                                 try:
                                                     int(value)
                                                 except:
-                                                    raise KeyError
-                                                else:
-                                                    if int(value) == roleid:
+                                                    if userdata[key] == value:
                                                         answerreturn(answer)
-                                    elif key == "discord roles name":
-                                        rolelist = userdata["discordroles"]
-                                        if len(rolelist) > 0:
-                                            for i in range(0, len(rolelist)):
-                                                rolename = rolelist[i]["name"]
-                                                if value == rolename:
-                                                    answerreturn(answer)
-                                    else:
-                                        if value == None:
-                                            if userdata[key] == None:
+                                                else:
+                                                    if userdata[key] == int(value):
+                                                        answerreturn(answer)
+                                    if operator == "is not":
+                                        if key == "members":
+                                            memlist = userdata["members"]
+                                            memlistval = value.split(", ")
+                                            if memlist != memlistval:
                                                 answerreturn(answer)
                                         else:
+                                            if value == None:
+                                                if userdata[key] != None:
+                                                    answerreturn(answer)
+                                            else:
+                                                try:
+                                                    int(value)
+                                                except:
+                                                    if userdata[key] != value:
+                                                        answerreturn(answer)
+                                                else:
+                                                    if userdata[key] != int(value):
+                                                        answerreturn(answer)
+                                    if operator == "contains":
+                                        if key == "members":
+                                            memlist = userdata["members"]
+                                            memlistval = value.split(", ")
+                                            for item in memlistval:
+                                                if item in memlist:
+                                                    answerreturn(answer)
+                                        else:
+                                            if str(value) == str(userdata[key]):
+                                                answerreturn(answer)
+                                    if operator == "is less than":
+                                        if key == "balance":
                                             try:
                                                 int(value)
                                             except:
-                                                if userdata[key] == value:
+                                                pass
+                                            else:
+                                                if int(value) >= userdata['balance']:
+                                                    answerreturn(answer)
+                                    if operator == "is greater than":
+                                        if key == "balance":
+                                            try:
+                                                int(value)
+                                            except:
+                                                pass
+                                            else:
+                                                if int(value) <= userdata['balance']:
+                                                    answerreturn(answer)
+                                if svidtype == "user":
+                                    if operator == "is":
+                                        if key == "discord roles id":
+                                            rolelist = userdata["discordroles"]
+                                            if len(rolelist) > 0:
+                                                for i in range(0, len(rolelist)):
+                                                    roleid = rolelist[i]["id"]
+                                                    try:
+                                                        int(value)
+                                                    except:
+                                                        raise KeyError
+                                                    else:
+                                                        if int(value) == roleid:
+                                                            answerreturn(answer)
+                                        elif key == "discord roles name":
+                                            rolelist = userdata["discordroles"]
+                                            if len(rolelist) > 0:
+                                                for i in range(0, len(rolelist)):
+                                                    rolename = rolelist[i]["name"]
+                                                    if value == rolename:
+                                                        answerreturn(answer)
+                                        else:
+                                            if value == None:
+                                                if userdata[key] == None:
                                                     answerreturn(answer)
                                             else:
-                                                if userdata[key] == int(value):
-                                                    answerreturn(answer)
-                                if operator == "is not":
-                                    if key == "discord roles id":
-                                        rolelist = userdata["discordroles"]
-                                        if len(rolelist) > 0:
-                                            for i in range(0, len(rolelist)):
-                                                roleid = rolelist[i]["id"]
-                                                haverole = False
                                                 try:
                                                     int(value)
                                                 except:
-                                                    raise KeyError
+                                                    if userdata[key] == value:
+                                                        answerreturn(answer)
                                                 else:
-                                                    if int(value) == roleid:
+                                                    if userdata[key] == int(value):
+                                                        answerreturn(answer)
+                                    if operator == "is not":
+                                        if key == "discord roles id":
+                                            rolelist = userdata["discordroles"]
+                                            if len(rolelist) > 0:
+                                                for i in range(0, len(rolelist)):
+                                                    roleid = rolelist[i]["id"]
+                                                    haverole = False
+                                                    try:
+                                                        int(value)
+                                                    except:
+                                                        raise KeyError
+                                                    else:
+                                                        if int(value) == roleid:
+                                                            haverole = True
+                                                    if haverole == False:
+                                                        answerreturn(answer)
+                                        elif key == "discord roles name":
+                                            rolelist = userdata["discordroles"]
+                                            if len(rolelist) > 0:
+                                                haverole  = False
+                                                for i in range(0, len(rolelist)):
+                                                    rolename = rolelist[i]["name"]
+                                                    if value == rolename:
                                                         haverole = True
                                                 if haverole == False:
                                                     answerreturn(answer)
-                                    elif key == "discord roles name":# FIX
-                                        rolelist = userdata["discordroles"]
-                                        if len(rolelist) > 0:
-                                            haverole  = False
-                                            for i in range(0, len(rolelist)):
-                                                rolename = rolelist[i]["name"]
-                                                if value == rolename:
-                                                    haverole = True
-                                            if haverole == False:
-                                                answerreturn(answer)
-                                    else:
-                                        if value == None:
-                                            if userdata[key] == None:
-                                                answerreturn(answer)
+                                        else:
+                                            if value == None:
+                                                if userdata[key] == None:
+                                                    answerreturn(answer)
+                                            else:
+                                                try:
+                                                    int(value)
+                                                except:
+                                                    if userdata[key] != value:
+                                                        answerreturn(answer)
+                                                else:
+                                                    if userdata[key] != int(value):
+                                                        answerreturn(answer)
+                                    if operator == "is less than": # value is smaller than results (yields all results greater than value)
+                                        if key == "discord roles id":
+                                            pass
+                                        elif key == "discord roles name":
+                                            pass
+                                        elif key == "svid":
+                                            pass
+                                        elif key == "username":
+                                            pass
+                                        elif key == "image url":
+                                            pass
                                         else:
                                             try:
                                                 int(value)
                                             except:
-                                                if userdata[key] != value:
-                                                    answerreturn(answer)
+                                                raise KeyError
                                             else:
-                                                if userdata[key] != int(value):
+                                                if int(value) >= userdata[key]:
                                                     answerreturn(answer)
-                                if operator == "is less than": # value is smaller than results (yields all results greater than value)
-                                    if key == "discord roles id":
-                                        pass
-                                    elif key == "discord roles name":
-                                        pass
-                                    elif key == "svid":
-                                        pass
-                                    elif key == "username":
-                                        pass
-                                    elif key == "image url":
-                                        pass
-                                    else:
-                                        try:
-                                            int(value)
-                                        except:
-                                            raise KeyError
+                                    if operator == "is greater than": # value is greater than result (yields all results smaller than value)
+                                        if key == "discord roles id":
+                                            pass
+                                        elif key == "discord roles name":
+                                            pass
+                                        elif key == "svid":
+                                            pass
+                                        elif key == "username":
+                                            pass
+                                        elif key == "image url":
+                                            pass
                                         else:
-                                            if int(value) >= userdata[key]:
-                                                answerreturn(answer)
-                                if operator == "is greater than": # value is greater than result (yields all results smaller than value)
-                                    if key == "discord roles id":
-                                        pass
-                                    elif key == "discord roles name":
-                                        pass
-                                    elif key == "svid":
-                                        pass
-                                    elif key == "username":
-                                        pass
-                                    elif key == "image url":
-                                        pass
-                                    else:
-                                        try:
-                                            int(value)
-                                        except:
-                                            raise KeyError
-                                        else:
-                                            if userdata[key] >= int(value):
-                                                answerreturn(answer)
-                                if operator == "contains":
-                                    if key == "discord roles id":
-                                        rolelist = userdata["discordroles"]
-                                        if len(rolelist) > 0:
-                                            for i in range(0, len(rolelist)):
-                                                roleid = rolelist[i]["id"]
-                                                try:
-                                                    int(value)
-                                                except:
-                                                    raise KeyError
-                                                else:
-                                                    if int(value) in roleid:
+                                            try:
+                                                int(value)
+                                            except:
+                                                raise KeyError
+                                            else:
+                                                if userdata[key] >= int(value):
+                                                    answerreturn(answer)
+                                    if operator == "contains":
+                                        if key == "discord roles id":
+                                            rolelist = userdata["discordroles"]
+                                            if len(rolelist) > 0:
+                                                for i in range(0, len(rolelist)):
+                                                    roleid = rolelist[i]["id"]
+                                                    try:
+                                                        int(value)
+                                                    except:
+                                                        raise KeyError
+                                                    else:
+                                                        if int(value) in roleid:
+                                                            answerreturn(answer)
+                                        elif key == "discord roles name":
+                                            rolelist = userdata["discordroles"]
+                                            if len(rolelist) > 0:
+                                                for i in range(0, len(rolelist)):
+                                                    rolename = rolelist[i]["name"]
+                                                    if value in rolename:
                                                         answerreturn(answer)
-                                    elif key == "discord roles name":
-                                        rolelist = userdata["discordroles"]
-                                        if len(rolelist) > 0:
-                                            for i in range(0, len(rolelist)):
-                                                rolename = rolelist[i]["name"]
-                                                if value in rolename:
-                                                    answerreturn(answer)
-                                    else:
-                                        if str(value) in str(userdata[key]):
-                                            answerreturn(answer)
-                except KeyError:
+                                        else:
+                                            if str(value) in str(userdata[key]):
+                                                answerreturn(answer)
+                            except KeyError:
+                                pass
+
+                if len(answerlist) == 0:
                     print("No result could be found.")
                 else:
-                    if len(answerlist) == 0:
-                        print("No result could be found.")
-                    else:
-                        answerlist = removedupli(answerlist)
-                        blankcount = 0
-                        for answer in answerlist:
-                            if filterblank == True:
-                                if answer is not None:
-                                    print(answer)
-                                else:
-                                    blankcount += 1
-                            else:
-                                print(answer)
-                        print("")
-                        print(f"{len(answerlist)} results")
+                    answerlist = removedupli(answerlist)
+                    blankcount = 0
+                    for answer in answerlist:
                         if filterblank == True:
-                            print(f"{blankcount} were blank")
-                        print("---")
+                            if answer is not None:
+                                print(answer)
+                            else:
+                                blankcount += 1
+                        else:
+                            print(answer)
+                    print("")
+                    print(f"{len(answerlist)} results")
+                    if filterblank == True:
+                        print(f"{blankcount} were blank")
+                    print("---")
             if eventsearch == "search.clear":
                 searchwindow.FindElement("search.box").Update("")
             if eventsearch == "search.cancel":
@@ -471,7 +563,7 @@ while True:
                         database = json.load(infile)
                 except FileNotFoundError:
                     database = {}
-                date = datetime.today().strftime('%Y-%m-%d')
+                date = datetime.today().strftime('%d-%m-%Y')
                 svidlist = []
                 
                 svidcount = 0
@@ -520,12 +612,14 @@ while True:
                         groupdict={}
                         groupdict["id"] = svid
                         groupdict["name"] = svapi.GetGroupnameFromSVID(svid)
+                        groupdict["balance"] = svapi.GetBalanceFromSVID(svid)
                         
                         memlist = svapi.GetGroupMembersFromSVID(svid)
                         if len(memlist) > 0:
                             groupdict["members"] = memlist
                         else:
                             groupdict["members"] = None
+                        
                         
                         todaysdata = {date:groupdict}
                         
