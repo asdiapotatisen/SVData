@@ -446,7 +446,6 @@ while True:
                         if filterblank == True:
                             print(f"{blankcount} were blank")
                         print("---")
-                            
             if eventsearch == "search.clear":
                 searchwindow.FindElement("search.box").Update("")
             if eventsearch == "search.cancel":
@@ -459,12 +458,14 @@ while True:
         [sg.Text("Get Data", size=(30, 1), justification="center", font=("Courier New", 24))], 
         [sg.Multiline(size=(100, 12), auto_refresh=True, autoscroll=True, reroute_stdout=True, font=("Courier New", 10))], 
         [sg.Text("")],
+        [sg.Check("Create svid.txt", default=True)],
         [sg.Button("Get Data", key = "getdata.getdata", font=("Courier New", 10)), sg.Button("Cancel", key = "getdata.cancel", font=("Courier New", 10))]
         ]
         getdatawindow = sg.Window("SV User Data: Get Data", layout=getdatalayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
         while True:
             eventgetdata, valuegetdata = getdatawindow.read()
             if eventgetdata == "getdata.getdata":
+                createsvid = valuegetdata[1]
                 try:
                     with open("database.json") as infile:
                         database = json.load(infile)
@@ -500,13 +501,15 @@ while True:
                 svidlist = removedupli(svidlist)
                 
                 svidlist.sort()
-                try:
-                    os.remove('usersvid.txt')
-                except:
-                    pass
                 
-                with open("usersvid.txt", 'a') as outfile:
-                    json.dump(svidlist, outfile, indent=2)
+                if createsvid == True:
+                    try:
+                        os.remove('svid.txt')
+                    except:
+                        pass
+                    print("Creating svid.txt")
+                    with open("svid.txt", 'a') as outfile:
+                        json.dump(svidlist, outfile, indent=2)
 
                 usercount = 0
                 for i in range(0, len(svidlist)):
@@ -798,7 +801,7 @@ while True:
     if eventmain == "main.help":
         mainwindow.Hide()
         helplayout = [
-            [sg.Text("Help and Feedback", size=(30, 1), justification="center", font=("Courier New", 24))], 
+
             [sg.Frame("Help", font=("Courier New", 10), layout=[
                 [sg.Frame("Users and Groups", font=("Courier New", 10), layout=[
                     [sg.Button("Get Data", key="help.getdata", font=("Courier New", 10)), sg.Button("Search", key="help.search", font=("Courier New", 10)), sg.Button("Compare", key="help.compare", font=("Courier New", 10))]
