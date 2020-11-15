@@ -146,7 +146,7 @@ def getkey(keyinput):
     elif keyformatter == "district":
         return "district"
     elif keyformatter == "days since last move":
-        return "days_since_last_move"
+        return "dayssincelastmove"
     elif keyformatter == "discord role id":
         return "discord roles id"
     elif keyformatter == "discord role name":
@@ -252,7 +252,7 @@ sg.theme("Mono Green")
 
 mainlayout = [
 [sg.Text("SV Data", size=(30, 1), justification="center", font=("Courier New", 24))], 
-[sg.Text("Version 2.0", size=(30, 1), justification="center", font=("Courier New", 10))],
+[sg.Text("Version 2.1", size=(30, 1), justification="center", font=("Courier New", 10))],
 [sg.Text("created by Asdia_", size=(30, 1), justification="center", font=("Courier New", 8))],
 [sg.Frame("Users and Groups", font=("Courier New", 10), layout=[
 [sg.Button("Get Data", key = "main.getdata", font=("Courier New", 10)), sg.Button("Search", key = "main.search", font=("Courier New", 10)), sg.Button("Compare", key="main.compare", font=("Courier New", 10))],])],
@@ -260,7 +260,7 @@ mainlayout = [
 ]
 
 
-mainwindow = sg.Window("SV User Data: Main", layout=mainlayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
+mainwindow = sg.Window("SV User Data: Main", layout=mainlayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
 
 while True:
     eventmain, valuemain = mainwindow.read()
@@ -276,7 +276,7 @@ while True:
         [sg.Checkbox("Filter out blank responses", default=True, font=("Courier New", 10))],
         [sg.Button("Submit", key = "search.submit", font=("Courier New", 10)), sg.Button("Clear Log", key="search.clear", font=("Courier New", 10)), sg.Button("Cancel", key = "search.cancel", font=("Courier New", 10))]
         ]
-        searchwindow = sg.Window("SV User Data: Search", layout=searchlayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
+        searchwindow = sg.Window("SV User Data: Search", layout=searchlayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
         while True:
             eventsearch, valuesearch = searchwindow.read()
             if eventsearch == "search.submit":
@@ -553,7 +553,7 @@ while True:
         [sg.Check("Create svid.txt", default=True, font=("Courier New", 10))],
         [sg.Button("Get Data", key = "getdata.getdata", font=("Courier New", 10)), sg.Button("Cancel", key = "getdata.cancel", font=("Courier New", 10))]
         ]
-        getdatawindow = sg.Window("SV User Data: Get Data", layout=getdatalayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
+        getdatawindow = sg.Window("SV User Data: Get Data", layout=getdatalayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
         while True:
             eventgetdata, valuegetdata = getdatawindow.read()
             if eventgetdata == "getdata.getdata":
@@ -678,7 +678,7 @@ while True:
         [sg.Text("")],
         [sg.Button("Submit", key = "compare.submit", font=("Courier New", 10)), sg.Button("Clear Log", key="compare.clear", font=("Courier New", 10)), sg.Button("Cancel", key="compare.cancel", font=("Courier New", 10))]
         ]
-        comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
+        comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
         while True:
             eventcompare, valuecompare = comparewindow.read()
             if eventcompare == "compare.cancel":
@@ -714,7 +714,7 @@ while True:
                 for item in inputlist211:
                     if item != '':
                         inputlist21.append(item)
-
+                        
                 if intype == "user svid":
                     for svid in inputlist11:
                         if svid != "None":
@@ -771,20 +771,26 @@ while True:
                         userdata = database[svid][numberofdates-1][date]
                     for twitchid in inputlist11:
                         if twitchid != "None":
-                            if userdata["twitch_id"] == twitchid:
-                                try:
-                                    svid = userdata["id"]
-                                    inputlist1.append(svid)
-                                except:
-                                    pass
+                            try:
+                                if userdata["twitch_id"] == twitchid:
+                                    try:
+                                        svid = userdata["id"]
+                                        inputlist1.append(svid)
+                                    except:
+                                        pass
+                            except KeyError:
+                                pass
                     for twitchid in inputlist21:
                         if twitchid != "None":
-                            if userdata["twitch_id"] == twitchid:
-                                try:
-                                    svid = userdata["id"]
-                                    inputlist2.append(svid)
-                                except:
-                                    pass
+                            try:
+                                if userdata["twitch_id"] == twitchid:
+                                    try:
+                                        svid = userdata["id"]
+                                        inputlist2.append(svid)
+                                    except:
+                                        pass
+                            except KeyError:
+                                pass
                 if intype == "username":
                     for svid in database:
                         numberofdates = len(database[svid])
@@ -792,20 +798,26 @@ while True:
                         userdata = database[svid][numberofdates-1][date]
                         for username in inputlist11:
                             if username != "None":
-                                if userdata["userName"] == username:
-                                    try:
-                                        svid = userdata["id"]
-                                        inputlist1.append(svid)
-                                    except:
-                                        pass
+                                try:
+                                    if userdata["userName"] == username:
+                                        try:
+                                            svid = userdata["id"]
+                                            inputlist1.append(svid)
+                                        except:
+                                            pass
+                                except KeyError:
+                                    pass
                         for username in inputlist21:
                             if username != "None":
-                                if userdata["userName"] == username:
-                                    try:
-                                        svid = userdata["id"]
-                                        inputlist2.append(svid)
-                                    except:
-                                        pass
+                                try:
+                                    if userdata["userName"] == username:
+                                        try:
+                                            svid = userdata["id"]
+                                            inputlist2.append(svid)
+                                        except:
+                                            pass
+                                except KeyError:
+                                    pass
 
                 if intype == "group name":
                     for groupname in inputlist11:
@@ -915,7 +927,7 @@ while True:
             [sg.Text("")],
             [sg.Button("Cancel", key="help.cancel", font=("Courier New", 10))]
         ]
-        helpwindow = sg.Window("SV User Data: Help and Feedback", layout=helplayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
+        helpwindow = sg.Window("SV User Data: Help and Feedback", layout=helplayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
         while True:
             eventhelp, valuehelp = helpwindow.read()
             if eventhelp == "help.version":
