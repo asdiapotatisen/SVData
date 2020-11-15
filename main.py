@@ -5,54 +5,8 @@ import re
 import os
 import json
 from datetime import datetime
-import requests
-
-s = requests.Session()
-s.trust_env = False
-
-def GetSVIDFromMinecraft(minecraftid):
-    result = s.get(f"https://api.spookvooper.com/User/GetSVIDFromMinecraft?minecraftid={minecraftid}").text
-    if "Could not find" in result:
-        raise Exception("GetSVIDFromMinecraft: Param(s) are invalid.")
-    else:
-        return result
-
-def GetUserDataFromSVID(svid):
-    result = s.get(f"https://api.spookvooper.com/User/GetUser?SVID={svid}").text
-    if "Could not find" in result:
-        raise Exception("GetUser: Param(s) are invalid.")
-    else:
-        return json.loads(result)
-
-def GetDiscordIdFromSVID(svid):
-    result = s.get(f"https://api.spookvooper.com/User/GetUser?SVID={svid}").text
-    if "Could not find" in result:
-        raise Exception("GetDiscordRolesFromSVID: Param(s) are invalid.")
-    else:
-        data = json.loads(result)
-        discordid = data["discord_id"]
-        return discordid
-
-def GetSVIDFromDiscord(discordid):
-    result = s.get(f"https://api.spookvooper.com/User/GetSVIDFromDiscord?discordid={discordid}").text
-    if "Could not find" in result:
-        raise Exception("GetSVIDFromDiscord: Param(s) are invalid.")
-    else:
-        return result
-
-def GetDaysSinceLastMoveFromSVID(svid):
-    result = s.get(f"https://api.spookvooper.com/User/GetDaysSinceLastMove?SVID={svid}").text
-    if "Could not find" in result:
-        raise Exception("GetDaysSinceLastMoveFromSVID: Param(s) are invalid.")
-    else:
-        return json.loads(result)
-
-def GetDiscordRolesFromSVID(svid):
-    result = s.get(f"https://api.spookvooper.com/User/GetDiscordRoles?SVID={svid}").text
-    if "Could not find" in result:
-        raise Exception("GetDiscordRolesFromSVID: Param(s) are invalid.")
-    else:
-        return json.loads(result)
+import svapi
+import webbrowser
 
 def answerreturn(answer):
     if answer == "svid":
@@ -131,6 +85,7 @@ def answerreturn(answer):
             answerlist.append(rolenamelist)
         except:
             pass
+
 def getkey(keyinput):
     if keyformatter == "svid":
         return "id"
@@ -197,10 +152,11 @@ def removedupli(inputlist):
     return templist
 
 helplist = ["Get Data", "Search", "Compare"]
-keylist = ["svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "credits", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name"]
+keylistgroup = ["group svid", "group name" , "group name", "group members", "group permission"]
+keylist = ["user svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "credits", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name"]
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
 modelist = ["AND", "OR", "XOR"]
-typelist = ["svid", "discord id" , "twitch id" ,"minecraft id"]
+typelist = ["user svid", "username", "discord id" , "twitch id" ,"minecraft id", "group svid", "group name"]
 urllist = [
     "https://spookvooper.com/user/search/a",
     "https://spookvooper.com/user/search/b", 
@@ -237,34 +193,74 @@ urllist = [
     "https://spookvooper.com/user/search/6", 
     "https://spookvooper.com/user/search/7", 
     "https://spookvooper.com/user/search/8", 
-    "https://spookvooper.com/user/search/9"
-]
+    "https://spookvooper.com/user/search/9", 
+    "https://spookvooper.com/group/search/a",
+    "https://spookvooper.com/group/search/b", 
+    "https://spookvooper.com/group/search/c", 
+    "https://spookvooper.com/group/search/d", 
+    "https://spookvooper.com/group/search/e", 
+    "https://spookvooper.com/group/search/f", 
+    "https://spookvooper.com/group/search/g", 
+    "https://spookvooper.com/group/search/h", 
+    "https://spookvooper.com/group/search/i", 
+    "https://spookvooper.com/group/search/j", 
+    "https://spookvooper.com/group/search/k", 
+    "https://spookvooper.com/group/search/l", 
+    "https://spookvooper.com/group/search/m", 
+    "https://spookvooper.com/group/search/n", 
+    "https://spookvooper.com/group/search/o", 
+    "https://spookvooper.com/group/search/p", 
+    "https://spookvooper.com/group/search/q", 
+    "https://spookvooper.com/group/search/r", 
+    "https://spookvooper.com/group/search/s", 
+    "https://spookvooper.com/group/search/t", 
+    "https://spookvooper.com/group/search/u", 
+    "https://spookvooper.com/group/search/v", 
+    "https://spookvooper.com/group/search/w", 
+    "https://spookvooper.com/group/search/x", 
+    "https://spookvooper.com/group/search/y", 
+    "https://spookvooper.com/group/search/z", 
+    "https://spookvooper.com/group/search/0", 
+    "https://spookvooper.com/group/search/1", 
+    "https://spookvooper.com/group/search/2", 
+    "https://spookvooper.com/group/search/3", 
+    "https://spookvooper.com/group/search/4", 
+    "https://spookvooper.com/group/search/5", 
+    "https://spookvooper.com/group/search/6", 
+    "https://spookvooper.com/group/search/7", 
+    "https://spookvooper.com/group/search/8", 
+    "https://spookvooper.com/group/search/9"
+    ]
 
 sg.theme("Mono Green")
 
 mainlayout = [
-[sg.Text("Main Menu", size = (15, 1))], 
-[sg.Button("Get Data", key = "main.getdata"), sg.Button("Search", key = "main.search"), sg.Button("Compare", key="main.compare"), sg.Button("Help", key="main.help"), sg.Button("Quit", key="main.quit")]
+[sg.Text("SV Data", size=(30, 1), justification="center", font=("Courier New", 24))], 
+[sg.Text("Version 2.0", size=(30, 1), justification="center", font=("Courier New", 10))],
+[sg.Text("created by Asdia_", size=(30, 1), justification="center", font=("Courier New", 8))],
+[sg.Frame("Users and Groups", font=("Courier New", 10), layout=[
+[sg.Button("Get Data", key = "main.getdata", font=("Courier New", 10)), sg.Button("Search", key = "main.search", font=("Courier New", 10)), sg.Button("Compare", key="main.compare", font=("Courier New", 10))],])],
+[sg.Button("Help and Feedback", key="main.help", font=("Courier New", 10)), sg.Button("Quit", key="main.quit", font=("Courier New", 10))]
 ]
 
 
-mainwindow = sg.Window("SV User Data: Main", layout=mainlayout).finalize()
-mainwindow.maximize()
+mainwindow = sg.Window("SV User Data: Main", layout=mainlayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
 
 while True:
     eventmain, valuemain = mainwindow.read()
     if eventmain == "main.search":
         mainwindow.Hide()
         searchlayout = [
-        [sg.Text("Search Menu", size = (15, 5))],
-        [sg.Multiline(size=(300, 25), auto_refresh=True, autoscroll=True, reroute_stdout=True, key="search.box")], 
-        [sg.Text("Search all "), sg.Combo(keylist, default_value="svid"), sg.Text(" where "), sg.Combo(keylist, default_value="username"), sg.Combo(operationlist, default_value="is"), sg.Input("value", size=(40, 1)), sg.Text(" on " ), sg.Text("date", key="search.date", size=(8, 1)), sg.Text(""), sg.CalendarButton('Choose date', target="search.date", format="%d-%m-%Y")],
+        [sg.Text("Search", size=(30, 1), justification="center", font=("Courier New", 24))], 
+        [sg.Multiline(size=(100, 12), auto_refresh=True, autoscroll=True, reroute_stdout=True, key="search.box")], 
+        [sg.Text("Search all ", font=("Courier New", 10)), sg.Combo(keylist, default_value="svid", font=("Courier New", 10)), sg.Text(" where ", font=("Courier New", 10)), sg.Combo(keylist, default_value="username", font=("Courier New", 10)), sg.Combo(operationlist, default_value="is", font=("Courier New", 10))],
+        [sg.Input("value", size=(10, 1), font=("Courier New", 10)), sg.Text(" on ", font=("Courier New", 10)), sg.Text("date", key="search.date", size=(8, 1), font=("Courier New", 10))],
+        [sg.CalendarButton('Choose date', font=("Courier New", 10), target="search.date", format="%d-%m-%Y")],
         [sg.Text("")],
-        [sg.Checkbox("Filter out blank responses", default=True)],
-        [sg.Button("Submit", key = "search.submit"), sg.Button("Clear Log", key="search.clear"), sg.Button("Cancel", key = "search.cancel")]
+        [sg.Checkbox("Filter out blank responses", default=True, font=("Courier New", 10))],
+        [sg.Button("Submit", key = "search.submit", font=("Courier New", 10)), sg.Button("Clear Log", key="search.clear", font=("Courier New", 10)), sg.Button("Cancel", key = "search.cancel", font=("Courier New", 10))]
         ]
-        searchwindow = sg.Window("SV User Data: Search", layout=searchlayout).finalize()
-        searchwindow.maximize()
+        searchwindow = sg.Window("SV User Data: Search", layout=searchlayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
         while True:
             eventsearch, valuesearch = searchwindow.read()
             if eventsearch == "search.submit":
@@ -456,18 +452,16 @@ while True:
             if eventsearch == "search.cancel":
                 searchwindow.close()
                 mainwindow.UnHide()
-                mainwindow.maximize()
                 break
     if eventmain == "main.getdata":
         mainwindow.Hide()
         getdatalayout = [
-        [sg.Text("Get Data Menu", size = (15, 5))], 
-        [sg.Multiline(size=(300, 25), auto_refresh=True, autoscroll=True, reroute_stdout=True)], 
+        [sg.Text("Get Data", size=(30, 1), justification="center", font=("Courier New", 24))], 
+        [sg.Multiline(size=(100, 12), auto_refresh=True, autoscroll=True, reroute_stdout=True, font=("Courier New", 10))], 
         [sg.Text("")],
-        [sg.Button("Get Data", key = "getdata.getdata"), sg.Button("Cancel", key = "getdata.cancel")]
+        [sg.Button("Get Data", key = "getdata.getdata", font=("Courier New", 10)), sg.Button("Cancel", key = "getdata.cancel", font=("Courier New", 10))]
         ]
-        getdatawindow = sg.Window("SV User Data: Get Data", layout=getdatalayout).finalize()
-        getdatawindow.maximize()
+        getdatawindow = sg.Window("SV User Data: Get Data", layout=getdatalayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
         while True:
             eventgetdata, valuegetdata = getdatawindow.read()
             if eventgetdata == "getdata.getdata":
@@ -487,47 +481,77 @@ while True:
                     html_page = urlopen(req)
                     soup = BeautifulSoup(html_page, "html.parser")
                     for link in soup.findAll('a'):
+                        svidcount += 1
                         linkget = str(link.get('href'))
                         if "/User/Info?svid=" in linkget:
                             linkget = linkget.replace("/User/Info?svid=", "")
                             svidlist.append(linkget)
-                            svidcount += 1
                             url = url.replace('https://spookvooper.com/user/search/', '')
-                            print(f"Getting SVIDs       {svidcount}     {url}")
+                            urltype = "user"
+                            print(f"Getting SVIDs       {svidcount}     {urltype}: {url}")
+                        elif "/Group/View?groupid=" in linkget:
+                            linkget = linkget.replace("/Group/View?groupid=", "")
+                            svidlist.append(linkget)
+                            url = url.replace('https://spookvooper.com/group/search/', '')
+                            urltype = "group"
+                            print(f"Getting SVIDs       {svidcount}     {urltype}: {url}")
                 
                 print("Removing duplicate SVIDs")
                 svidlist = removedupli(svidlist)
                 
                 svidlist.sort()
                 try:
-                    os.remove('svidlist.txt')
+                    os.remove('usersvid.txt')
                 except:
                     pass
                 
-                with open("svidlist.txt", 'a') as outfile:
+                with open("usersvid.txt", 'a') as outfile:
                     json.dump(svidlist, outfile, indent=2)
 
                 usercount = 0
                 for i in range(0, len(svidlist)):
+                    svid = svidlist[i]
                     try:
-                        svid = svidlist[i]
-                        userdatabasedict = GetUserDataFromSVID(svid)
-                        dayssincelastmove = GetDaysSinceLastMoveFromSVID(svid)
-                        userdatabasedict["dayssincelastmove"] = dayssincelastmove
-                        rolelist = GetDiscordRolesFromSVID(svid)
-                        userdatabasedict["discordroles"] = rolelist
-                    except json.decoder.JSONDecodeError:
-                        userdatabasedict["discord_id"] = None
-                        userdatabasedict["discordroles"] = []
-                    
-                    todaysdata = {date:userdatabasedict}
-                    
-                    try:
-                        database[svid].append(todaysdata)
-                    except KeyError:
-                        database[svid] = []
-                        database[svid].append(todaysdata)
-                    
+                        svapi.GetUserDataFromSVID(svid)
+                    except:
+                        groupdict={}
+                        groupdict["id"] = svid
+                        groupdict["name"] = svapi.GetGroupnameFromSVID(svid)
+                        
+                        memlist = svapi.GetGroupMembersFromSVID(svid)
+                        if len(memlist) > 0:
+                            groupdict["members"] = memlist
+                        else:
+                            groupdict["members"] = None
+                        
+                        todaysdata = {date:groupdict}
+                        
+                        try:
+                            database[svid].append(todaysdata)
+                        except KeyError:
+                            database[svid] = []
+                            database[svid].append(todaysdata)
+                    else:
+                        try:
+                            userdatabasedict = svapi.GetUserDataFromSVID(svid)
+                            dayssincelastmove = svapi.GetDaysSinceLastMoveFromSVID(svid)
+                            userdatabasedict["dayssincelastmove"] = dayssincelastmove
+                            rolelist = svapi.GetDiscordRolesFromSVID(svid)
+                            userdatabasedict["discordroles"] = rolelist
+                        except json.decoder.JSONDecodeError:
+                            userdatabasedict["discord_id"] = None
+                            userdatabasedict["discordroles"] = []
+                        
+                        todaysdata = {date:userdatabasedict}
+                        
+                        try:
+                            database[svid].append(todaysdata)
+                        except KeyError:
+                            database[svid] = []
+                            database[svid].append(todaysdata)
+                        
+                        
+                        
                     usercount += 1
                     
                     print(f"Getting User Data           {usercount}     out of {len(svidlist)}")
@@ -544,29 +568,28 @@ while True:
             if eventgetdata == "getdata.cancel":
                 getdatawindow.close()
                 mainwindow.UnHide()
-                mainwindow.maximize()
                 break
     if eventmain == "main.compare":
         mainwindow.Hide()
         comparelayout = [
-        [sg.Text("Compare Menu", size=(15, 5))],
-        [sg.Text("Input type: "), sg.Combo(typelist, default_value="svid")],
-        [sg.Multiline("Input 1", size = (90, 12)), sg.Multiline("Input 2", size = (90, 12))],
-        [sg.Text("Mode: "), sg.Combo(modelist, default_value="AND")],
-        [sg.Text("Output type: "), sg.Combo(typelist, default_value="svid")],
-        [sg.Multiline("Output", size=(200, 12), key="compare.output", auto_refresh=True, autoscroll=True, reroute_stdout=True)],
+        [sg.Text("Compare", size=(30, 1), justification="center", font=("Courier New", 24))], 
+        [sg.Text("  Input type: ", font=("Courier New", 10)), sg.Combo(typelist, default_value="user svid", size=(12, 1), font=("Courier New", 10))],
+        [sg.Multiline("Input 1", font=("Courier New", 10), size = (50, 6)), sg.Multiline("Input 2", font=("Courier New", 10), size = (50, 6))],
+        [sg.Text("   Mode: ", font=("Courier New", 10)), sg.Combo(modelist, default_value="AND", size=(7, 1), font=("Courier New", 10))],
+        [sg.Text(" Output type: ", font=("Courier New", 10)), sg.Combo(typelist, default_value="user svid", size=(12, 1), font=("Courier New", 10))],
+        [sg.Multiline("", size=(105, 6), key="compare.output", auto_refresh=True, autoscroll=True, reroute_stdout=True, font=("Courier New", 10))],
         [sg.Text("")],
-        [sg.Button("Submit", key = "compare.submit"), sg.Button("Cancel", key="compare.cancel")]
+        [sg.Button("Submit", key = "compare.submit", font=("Courier New", 10)), sg.Button("Clear Log", key="compare.clear", font=("Courier New", 10)), sg.Button("Cancel", key="compare.cancel", font=("Courier New", 10))]
         ]
-        comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout).finalize()
-        comparewindow.maximize()
+        comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
         while True:
             eventcompare, valuecompare = comparewindow.read()
             if eventcompare == "compare.cancel":
                 comparewindow.close()
                 mainwindow.UnHide()
-                mainwindow.Maximize()
                 break
+            if eventcompare == "compare.clear":
+                comparewindow["compare.output"].Update("")
             if eventcompare == "compare.submit":
                 intype = valuecompare[0]
                 input1 = valuecompare[1]
@@ -588,37 +611,42 @@ while True:
                 inputlist21 = []
                 
                 for item in inputlist111:
-                    if item == '':
-                        pass
-                    else:
+                    if item != '':
                         inputlist11.append(item)
 
                 for item in inputlist211:
-                    if item == '':
-                        pass
-                    else:
+                    if item != '':
                         inputlist21.append(item)
-                        
-                if intype == "svid":
+
+                if intype == "user svid":
                     for svid in inputlist11:
                         if svid != "None":
-                            inputlist1.append(svid)
+                            try:
+                                svapi.GetBalanceFromSVID(svid)
+                            except:
+                                pass
+                            else:
+                                inputlist1.append(svid)
                     for svid in inputlist21:
                         if svid != "None":
-                            inputlist2.append(svid)
-                                
+                            try:
+                                svapi.GetBalanceFromSVID(svid)
+                            except:
+                                pass
+                            else:
+                                inputlist2.append(svid)
                 if intype == "discord id":
                     for discordid in inputlist11:
                         if discordid != "None":
                             try:
-                                svid = GetSVIDFromDiscord(discordid)
+                                svid = svapi.GetSVIDFromDiscord(discordid)
                                 inputlist1.append(svid)
                             except:
                                 pass
                     for discordid in inputlist21:
                         if discordid != "None":
                             try:
-                                svid = GetSVIDFromDiscord(discordid)
+                                svid = svapi.GetSVIDFromDiscord(discordid)
                                 inputlist2.append(svid)
                             except:
                                 pass
@@ -627,14 +655,14 @@ while True:
                     for minecraftid in inputlist11:
                         if minecraftid != "None":
                             try:
-                                svid = GetSVIDFromMinecraft(minecraftid)
+                                svid = svapi.GetSVIDFromMinecraft(minecraftid)
                                 inputlist1.append(svid)
                             except:
                                 pass
                     for minecraftid in inputlist21:
                         if minecraftid != "None":
                             try:
-                                svid = GetSVIDFromMinecraft(minecraftid)
+                                svid = svapi.GetSVIDFromMinecraft(minecraftid)
                                 inputlist2.append(svid)
                             except:
                                 pass
@@ -660,6 +688,55 @@ while True:
                                     inputlist2.append(svid)
                                 except:
                                     pass
+                if intype == "username":
+                    for svid in database:
+                        numberofdates = len(database[svid])
+                        date = list(database[svid][numberofdates-1].keys())[0]
+                        userdata = database[svid][numberofdates-1][date]
+                        for username in inputlist11:
+                            if username != "None":
+                                if userdata["userName"] == username:
+                                    try:
+                                        svid = userdata["id"]
+                                        inputlist1.append(svid)
+                                    except:
+                                        pass
+                        for username in inputlist21:
+                            if username != "None":
+                                if userdata["userName"] == username:
+                                    try:
+                                        svid = userdata["id"]
+                                        inputlist2.append(svid)
+                                    except:
+                                        pass
+
+                if intype == "group name":
+                    for groupname in inputlist11:
+                        if groupname != None:
+                            try:
+                                svid = svapi.GetSVIDFromGroupname(groupname)
+                                inputlist1.append(svid)
+                            except:
+                                pass
+                    for groupname in inputlist21:
+                        if groupname != None:
+                            try:
+                                svid = svapi.GetSVIDFromGroupname(groupname)
+                                inputlist2.append(svid)
+                            except:
+                                pass
+                            
+                if intype == "group svid":
+                    for svid in inputlist11:
+                        if svid != "None":
+                            result = svapi.DoesGroupExistFromSVID(svid)
+                            if result == True:
+                                inputlist1.append(svid)
+                    for svid in inputlist21:
+                        if svid != "None":
+                            result = svapi.DoesGroupExistFromSVID(svid)
+                            if result == True:
+                                inputlist2.append(svid)
 
                 if mode == "AND":
                     for svid in inputlist1:
@@ -682,26 +759,33 @@ while True:
                 answerlistfinal = []
                 
                 for svid in answerlist:
-                    numberofdates = len(database[svid])
-                    date = list(database[svid][numberofdates-1].keys())[0]
-                    userdata = database[svid][numberofdates-1][date]
-                    
-                    if outputtype == "svid":
-                        answerlistfinal.append(svid)
-                    if outputtype == "discord id":
-                        answerlistfinal.append(GetDiscordIdFromSVID(svid))
-                    if outputtype == "minecraft id":
-                        if userdata["minecraft_id"] == None:
-                            answerlistfinal.append("None")
-                        else:
-                            answerlistfinal.append(userdata["minecraft_id"])
-                    if outputtype == "twitch id":
-                        if userdata["twitch_id"] == None:
-                            answerlistfinal.append("None")
-                        else:
-                            answerlistfinal.append(userdata["twitch_id"])              
-
-                comparewindow["compare.output"].update("")
+                    try:
+                        numberofdates = len(database[svid])
+                        date = list(database[svid][numberofdates-1].keys())[0]
+                        userdata = database[svid][numberofdates-1][date]
+                    except: # group
+                        if outputtype == "group svid":
+                            answerlistfinal.append(svid)
+                        if outputtype == "group name":
+                            answerlistfinal.append(svapi.GetGroupnameFromSVID(svid))
+                    else:
+                        if outputtype == "user svid":
+                            answerlistfinal.append(svid)
+                        if outputtype == "discord id":
+                            answerlistfinal.append(svapi.GetDiscordIdFromSVID(svid))
+                        if outputtype == "minecraft id":
+                            if userdata["minecraft_id"] == None:
+                                answerlistfinal.append("None")
+                            else:
+                                answerlistfinal.append(userdata["minecraft_id"])
+                        if outputtype == "twitch id":
+                            if userdata["twitch_id"] == None:
+                                answerlistfinal.append("None")
+                            else:
+                                answerlistfinal.append(userdata["twitch_id"])     
+                        if outputtype == "username":
+                            username = userdata["userName"]
+                            answerlistfinal.append(username)
                 if len(answerlistfinal) == 0:
                     print("No result could be found.")
                 if len(answerlistfinal) > 0:
@@ -714,81 +798,46 @@ while True:
     if eventmain == "main.help":
         mainwindow.Hide()
         helplayout = [
-            [sg.Text("Help Menu", size=(15, 5))],
-            [sg.Text("Select a mode to learn more about it: "), sg.Combo(helplist, default_value="Get Data")],
-            [sg.Multiline("", size=(300, 12), key="help.output")],
+            [sg.Text("Help and Feedback", size=(30, 1), justification="center", font=("Courier New", 24))], 
+            [sg.Frame("Help", font=("Courier New", 10), layout=[
+                [sg.Frame("Users and Groups", font=("Courier New", 10), layout=[
+                    [sg.Button("Get Data", key="help.getdata", font=("Courier New", 10)), sg.Button("Search", key="help.search", font=("Courier New", 10)), sg.Button("Compare", key="help.compare", font=("Courier New", 10))]
+                ])],
+                [sg.Frame("Stocks", layout=[
+                    
+                    # stock help layout
+                    
+                    
+                ])]])],
+            [sg.Frame("Feedback", font=("Courier New", 10), layout=[
+                [sg.Button("Report a bug", key="help.bug", font=("Courier New", 10)),
+                 sg.Button("Request a new feature", key="help.feature", font=("Courier New", 10)),
+                 sg.Button("Ask a question", key="help.question", font=("Courier New", 10))]
+                            ])],
+            [sg.Button("Check for newer version", key="help.version", font=("Courier New", 10))],
             [sg.Text("")],
-            [sg.Button("Submit", key="help.submit"),sg.Button("Cancel", key="help.cancel")]
+            [sg.Button("Cancel", key="help.cancel", font=("Courier New", 10))]
         ]
-        helpwindow = sg.Window("SV User Data: Help", layout=helplayout).finalize()
-        helpwindow.maximize()
+        helpwindow = sg.Window("SV User Data: Help and Feedback", layout=helplayout, icon=r"Z:\random stuff\python\sv\userdata\unity-1k.ico", element_justification="c")
         while True:
             eventhelp, valuehelp = helpwindow.read()
-            if eventhelp == "help.submit":
-                mode = valuehelp[0]
-                if mode == "Get Data":
-                    content = """Get Data is the most basic mode. It retrieves data by scraping SVIDs from spookvooper.com and then feeds it through the SpookVooper API to get the user data. The process is quite long, taking an average of 10 to 15 minutes. That is why it is recommended you only retrieve data daily, as the information retrieved would be fairly accurate for general searching.
-
-Do take note that two files, database.json and svidlist.txt, will be created in the same directory as where the .exe file is. Do NOT delete database.json as the other modes rely on it to function. svidlist.txt is just there so you can easily access a list of SVIDs should you need it."""
-                    helpwindow["help.output"].update(content)
-                if mode == "Search":
-                    content = """Search is by far the most useful mode. It searches through database.json and finds all suitable results based on your 6 inputs: 
-* output type
-* key
-* operation
-* value
-* date
-* filter (True by default)
-
-These inputs can be put into the following sentence:
-
-Find all [output type] such that [key] [operator] [value] on [date (DD-MM-YYYY)].
-
-For example, "Find all [username] such that [credits] [is less than] [100000] on [14-11-2020].
-"""
-                    helpwindow["help.output"].update(content)
-                if mode == "Compare":
-                    content = """Compare is used to get a list from two lists, based on your mode (operation). There are 3 inputs:
-
-* input type
-* mode (operation)
-* output type
-
-Input type is the type of your two inputs; both inputs must be the same. 
-
-Mode (operation) is how you want to filter both lists. There are 3 modes: AND, OR and XOR.
-
-    AND returns a list of elements such that all elements can be found in both input lists.
-    
-        | Input 1 | Input 2 | Output |
-        |     0     |     0     |     0     |
-        |     1     |     0     |     0     |
-        |     0     |     1     |     0     |
-        |     1     |     1     |     1     |
-
-    OR returns a list of elements such that all elements can be found in at least one input list.
-
-        | Input 1 | Input 2 | Output |
-        |     0     |     0     |     0     |
-        |     1     |     0     |     1     |
-        |     0     |     1     |     1     |
-        |     1     |     1     |     1     |
-
-    XOR returns a list of elements such that all elements can only be found in exactly one input list.
-
-        | Input 1 | Input 2 | Output |
-        |     0     |     0     |     0     |
-        |     1     |     0     |     1     |
-        |     0     |     1     |     1     |
-        |     1     |     1     |     0     |
-        
-Output type is the type you want the output to be.
-"""
-                    helpwindow["help.output"].update(content)
+            if eventhelp == "help.version":
+                webbrowser.open("https://github.com/asdiapotatisen/SVData/releases")
+            if eventhelp == "help.getdata":
+                webbrowser.open("https://github.com/asdiapotatisen/SVData/wiki/Get-Data-Menu")
+            if eventhelp == "help.search":
+                webbrowser.open("https://github.com/asdiapotatisen/SVData/wiki/Search-Menu")
+            if eventhelp == "help.compare":
+                webbrowser.open("https://github.com/asdiapotatisen/SVData/wiki/Compare-Menu")
+            if eventhelp == "help.bug":
+                webbrowser.open("https://github.com/asdiapotatisen/SVData/issues/new?assignees=asdiapotatisen&labels=bug&template=bug_report.md&title=")
+            if eventhelp == "help.feature":
+                webbrowser.open("https://github.com/asdiapotatisen/SVData/issues/new?assignees=asdiapotatisen&labels=enhancement&template=feature_request.md&title=")
+            if eventhelp == "help.question":
+                webbrowser.open("https://github.com/asdiapotatisen/SVData/issues/new?assigness=asdiapotatisen&labels=question")
             if eventhelp == "help.cancel":
                 helpwindow.close()
                 mainwindow.UnHide()
-                mainwindow.maximize()
                 break
     if eventmain == "main.quit":
         break
