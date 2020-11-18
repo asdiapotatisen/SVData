@@ -723,13 +723,12 @@ while True:
                 getdatawindow.close()
                 mainwindow.UnHide()
                 break
-            
     if eventmain == "main.compare":
         mainwindow.Hide()
         comparelayout = [
         [sg.Text("Compare", size=(30, 1), justification="center", font=("Courier New", 24))], 
         [sg.Text("  Input type: ", font=("Courier New", 10)), sg.Combo(typelist, default_value="user svid", size=(12, 1), font=("Courier New", 10))],
-        [sg.Multiline("Input 1", font=("Courier New", 10), size = (50, 6)), sg.Multiline("Input 2", font=("Courier New", 10), size = (50, 6))],
+        [sg.FileBrowse("Input 1", key="compare.in1", file_types=(("Text Files", "*.txt"),)), sg.FileBrowse("Input 2", key="compare.in2", file_types=(("Text Files", "*.txt"),))],
         [sg.Text("   Mode: ", font=("Courier New", 10)), sg.Combo(modelist, default_value="AND", size=(7, 1), font=("Courier New", 10))],
         [sg.Text(" Output type: ", font=("Courier New", 10)), sg.Combo(typelist, default_value="user svid", size=(12, 1), font=("Courier New", 10))],
         [sg.Multiline("", size=(105, 6), key="compare.output", auto_refresh=True, autoscroll=True, reroute_stdout=True, font=("Courier New", 10))],
@@ -747,31 +746,23 @@ while True:
                 comparewindow["compare.output"].Update("")
             if eventcompare == "compare.submit":
                 intype = valuecompare[0]
-                input1 = valuecompare[1]
-                input2 = valuecompare[2]
-                mode = valuecompare[3]
-                outputtype = valuecompare[4]
+                mode = valuecompare[1]
+                outputtype = valuecompare[2]
+                
+                with open(valuecompare["compare.in1"]) as infile:
+                    inputlist11 = json.load(infile)
+                    
+                with open(valuecompare["compare.in2"]) as infile:
+                    inputlist21 = json.load(infile)
+                
                 inputlist1 = []
                 inputlist2 = []
-                
                 answerlist = []
 
                 with open("database.json") as infile:
                     database = json.load(infile)
 
-                inputlist111 = input1.split("\n")
-                inputlist211 = input2.split("\n")
-                
-                inputlist11 = []
-                inputlist21 = []
-                
-                for item in inputlist111:
-                    if item != '':
-                        inputlist11.append(item)
 
-                for item in inputlist211:
-                    if item != '':
-                        inputlist21.append(item)
                         
                 if intype == "user svid":
                     for svid in inputlist11:
