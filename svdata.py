@@ -167,12 +167,62 @@ def removedupli(inputlist):
             templist.append(item)
     return templist
 
-helplist = ["Get Data", "Search", "Compare"]
-keylistgroup = ["group svid", "group name" , "group name", "group members", "group permission"]
-keylist = ["user svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "user balance", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name", "group id", "group name", "group member", "group balance"]
-operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
+helplist = [
+    "Compare",
+    "Get Data",
+    "Search"]
+keylistgroup = [
+    "group members",
+    "group name",
+    "group svid"]
+keylist = [
+    "user svid",
+    "username",
+    "twitch id",
+    "discord id",
+    "post likes",
+    "comment likes",
+    "nationstate",
+    "description",
+    "user balance",
+    "api use count",
+    "minecraft id",
+    "twitch last message minute",
+    "twitch message xp",
+    "discord commends",
+    "discord commends sent",
+    "discord last commend hour",
+    "discord last commend message",
+    "discord message xp",
+    "discord message count",
+    "discord warning count",
+    "discord ban count",
+    "discord kick count",
+    "discord game xp",
+    "image url",
+    "district",
+    "days since last move",
+    "discord role id",
+    "discord role name",
+    "group id",
+    "group name",
+    "group member",
+    "group balance"]
+operationlist = [
+    "is",
+    "is not",
+    "is less than",
+    "is greater than",
+    "contains"]
 modelist = ["AND", "OR", "XOR"]
-typelist = ["user svid", "username", "discord id" , "twitch id" ,"minecraft id", "group svid", "group name"]
+typelist = [
+    "user svid",
+    "username",
+    "discord id",
+    "twitch id",
+    "minecraft id",
+    "group svid",
+    "group name"]
 urllistuser = [
     "https://spookvooper.com/user/search/a",
     "https://spookvooper.com/user/search/b", 
