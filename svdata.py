@@ -297,11 +297,19 @@ while True:
         [sg.CalendarButton('Choose date', font=("Courier New", 10), target="search.date", format="%d-%m-%Y")],
         [sg.Text("")],
         [sg.Checkbox("Filter out blank responses", default=True, font=("Courier New", 10))],
-        [sg.Button("Submit", key = "search.submit", font=("Courier New", 10)), sg.Button("Clear Log", key="search.clear", font=("Courier New", 10)), sg.Button("Cancel", key = "search.cancel", font=("Courier New", 10))]
+        [sg.Button("Submit", key = "search.submit", font=("Courier New", 10)), sg.Button("Save Result", key="search.save", font=("Courier New", 10)), sg.Button("Clear Log", key="search.clear", font=("Courier New", 10)), sg.Button("Cancel", key = "search.cancel", font=("Courier New", 10))]
         ]
         searchwindow = sg.Window("SV User Data: Search", layout=searchlayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
         while True:
             eventsearch, valuesearch = searchwindow.read()
+            if eventsearch == "search.save":
+                name_file = sg.PopupGetText('Enter Filename') + ".txt"
+                if name_file != None:
+                    try:
+                        file1 = open(name_file, 'r+')
+                    except FileNotFoundError:
+                        with open(name_file, "w+") as outfile:
+                            json.dump(answerlist, outfile, indent=2)
             if eventsearch == "search.submit":
                 answer = valuesearch[0]
                 keyformatter = valuesearch[1]
