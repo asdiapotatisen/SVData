@@ -173,7 +173,7 @@ keylist = ["user svid", "username", "twitch id", "discord id", "post likes", "co
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
 modelist = ["AND", "OR", "XOR"]
 typelist = ["user svid", "username", "discord id" , "twitch id" ,"minecraft id", "group svid", "group name"]
-urllist = [
+urllistuser = [
     "https://spookvooper.com/user/search/a",
     "https://spookvooper.com/user/search/b", 
     "https://spookvooper.com/user/search/c", 
@@ -209,7 +209,10 @@ urllist = [
     "https://spookvooper.com/user/search/6", 
     "https://spookvooper.com/user/search/7", 
     "https://spookvooper.com/user/search/8", 
-    "https://spookvooper.com/user/search/9", 
+    "https://spookvooper.com/user/search/9"
+    ]
+
+urllistgroup = [
     "https://spookvooper.com/group/search/a",
     "https://spookvooper.com/group/search/b", 
     "https://spookvooper.com/group/search/c", 
@@ -246,7 +249,7 @@ urllist = [
     "https://spookvooper.com/group/search/7", 
     "https://spookvooper.com/group/search/8", 
     "https://spookvooper.com/group/search/9"
-    ]
+]
 
 sg.theme("Mono Green")
 
@@ -257,7 +260,7 @@ mainlayout = [
 [sg.Frame("Users and Groups", font=("Courier New", 10), layout=[
 [sg.Button("Get Data", key = "main.getdata", font=("Courier New", 10)), sg.Button("Search", key = "main.search", font=("Courier New", 10)), sg.Button("Compare", key="main.compare", font=("Courier New", 10))],])],
 [sg.Frame("Stock Market", font=("Courier New", 10), layout = [
-[sg.Button("Stocks", key = "main.stocks", font("Courier New", 10))]
+    [sg.Button("Stocks", key = "main.stocks", font=("Courier New", 10))]
 ])],
 [sg.Button("Help and Feedback", key="main.help", font=("Courier New", 10)), sg.Button("Quit", key="main.quit", font=("Courier New", 10))]
 ]
@@ -271,16 +274,16 @@ while True:
         mainwindow.Hide()
         stockslayout = [
         [sg.Text("Stocks", size=(30, 1), justification="center", font=("Courier New", 24))],
-        [sg.Button("B", key="stocks.b", font=("Courier New", 10))]
-        # repeat, 3 tickers per line
+        [sg.Button("B", key="stocks.b", font=("Courier New", 10))],
+        # repeat, 3 tickers per line FIX
         [sg.Button("Cancel", key = "stocks.cancel", font=("Courier New", 10))]
-]
-        stockswindow = sg.Window("SV User Data: Stocks", layout=searchlayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
+        ]
+        stockswindow = sg.Window("SV User Data: Stocks", layout=stockslayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
         while True:
             eventstocks, valuestocks = stockswindow.read()
-            if eventstock = "stocks.b":
-                return
-            if eventstock = "stocks.cancel":
+            if eventstocks == "stocks.b":
+                pass
+            if eventstocks == "stocks.cancel":
                 stockswindow.close()
                 mainwindow.UnHide()
                 break
@@ -569,6 +572,12 @@ while True:
         getdatalayout = [
         [sg.Text("Get Data", size=(30, 1), justification="center", font=("Courier New", 24))], 
         [sg.Multiline(size=(100, 12), auto_refresh=True, autoscroll=True, reroute_stdout=True, font=("Courier New", 10))], 
+        [sg.Frame("User", layout=[
+            [sg.Check("Only get Users", font=("Courier New", 10)), sg.Check("Only get Users who have Discord", font=("Courier New", 10))]
+        ], font=("Courier New", 10))],
+        [sg.Frame("Group", layout=[
+            [sg.Check("Only get Groups", font=("Courier New", 10))]
+        ], font=("Courier New", 10))],
         [sg.Text("")],
         [sg.Check("Create svid.txt", default=True, font=("Courier New", 10))],
         [sg.Button("Get Data", key = "getdata.getdata", font=("Courier New", 10)), sg.Button("Cancel", key = "getdata.cancel", font=("Courier New", 10))]
@@ -577,7 +586,23 @@ while True:
         while True:
             eventgetdata, valuegetdata = getdatawindow.read()
             if eventgetdata == "getdata.getdata":
-                createsvid = valuegetdata[1]
+                onlyuser = valuegetdata[1]
+                onlydiscord = valuegetdata[2]
+                onlygroup = valuegetdata[3]
+                createsvid = valuegetdata[4]
+                
+                if onlyuser == True:
+                    if onlygroup == True:
+                        urllist = urllistuser + urllistgroup
+                    else:
+                        urllist = urllistuser
+                
+                if onlyuser == False:
+                    if onlygroup == False:
+                        urllist = urllistuser + urllistgroup
+                    else:
+                        urllist = urllistgroup
+
                 try:
                     with open("database.json") as infile:
                         database = json.load(infile)
@@ -656,16 +681,20 @@ while True:
                             rolelist = svapi.GetDiscordRolesFromSVID(svid)
                             userdatabasedict["discordroles"] = rolelist
                         except json.decoder.JSONDecodeError:
-                            userdatabasedict["discord_id"] = None
-                            userdatabasedict["discordroles"] = []
+                            if onlydiscord == False:
+                                userdatabasedict["discord_id"] = None
+                                userdatabasedict["discordroles"] = []
+                            else:
+                                dontgetdata = True
                         
-                        todaysdata = {date:userdatabasedict}
+                        if dontgetdata != True:
+                            todaysdata = {date:userdatabasedict}
                         
-                        try:
-                            database[svid].append(todaysdata)
-                        except KeyError:
-                            database[svid] = []
-                            database[svid].append(todaysdata)
+                            try:
+                                database[svid].append(todaysdata)
+                            except KeyError:
+                                database[svid] = []
+                                database[svid].append(todaysdata)
                         
                         
                         
@@ -686,6 +715,7 @@ while True:
                 getdatawindow.close()
                 mainwindow.UnHide()
                 break
+            
     if eventmain == "main.compare":
         mainwindow.Hide()
         comparelayout = [
