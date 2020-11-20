@@ -167,62 +167,12 @@ def removedupli(inputlist):
             templist.append(item)
     return templist
 
-helplist = [
-    "Compare",
-    "Get Data",
-    "Search"]
-keylistgroup = [
-    "group members",
-    "group name",
-    "group svid"]
-keylist = [
-    "user svid",
-    "username",
-    "twitch id",
-    "discord id",
-    "post likes",
-    "comment likes",
-    "nationstate",
-    "description",
-    "user balance",
-    "api use count",
-    "minecraft id",
-    "twitch last message minute",
-    "twitch message xp",
-    "discord commends",
-    "discord commends sent",
-    "discord last commend hour",
-    "discord last commend message",
-    "discord message xp",
-    "discord message count",
-    "discord warning count",
-    "discord ban count",
-    "discord kick count",
-    "discord game xp",
-    "image url",
-    "district",
-    "days since last move",
-    "discord role id",
-    "discord role name",
-    "group id",
-    "group name",
-    "group member",
-    "group balance"]
-operationlist = [
-    "is",
-    "is not",
-    "is less than",
-    "is greater than",
-    "contains"]
+helplist = ["Get Data", "Search", "Compare"]
+keylistgroup = ["group svid", "group name" , "group name", "group members", "group permission"]
+keylist = ["user svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "user balance", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name", "group id", "group name", "group member", "group balance"]
+operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
 modelist = ["AND", "OR", "XOR"]
-typelist = [
-    "user svid",
-    "username",
-    "discord id",
-    "twitch id",
-    "minecraft id",
-    "group svid",
-    "group name"]
+typelist = ["user svid", "username", "discord id" , "twitch id" ,"minecraft id", "group svid", "group name"]
 urllistuser = [
     "https://spookvooper.com/user/search/a",
     "https://spookvooper.com/user/search/b", 
@@ -343,7 +293,7 @@ while True:
         [sg.Text("Search", size=(30, 1), justification="center", font=("Courier New", 24))], 
         [sg.Multiline(size=(100, 12), auto_refresh=True, autoscroll=True, reroute_stdout=True, key="search.box")], 
         [sg.Text("Search all ", font=("Courier New", 10)), sg.Combo(keylist, default_value="user svid", font=("Courier New", 10)), sg.Text(" where ", font=("Courier New", 10)), sg.Combo(keylist, default_value="username", font=("Courier New", 10)), sg.Combo(operationlist, default_value="is", font=("Courier New", 10))],
-        [sg.Input("Asdia_", size=(10, 1), font=("Courier New", 10)), sg.Text(" on ", font=("Courier New", 10)), sg.Text(f"{datetime.today().strftime('%Y-%m-%d')}", key="search.date", size=(8, 1), font=("Courier New", 10))],
+        [sg.Input("Asdia_", size=(10, 1), font=("Courier New", 10)), sg.Text(" on ", font=("Courier New", 10)), sg.Text(datetime.today().strftime('%d-%m-%Y'), key="search.date", size=(8, 1), font=("Courier New", 10))],
         [sg.CalendarButton('Choose date', font=("Courier New", 10), target="search.date", format="%d-%m-%Y")],
         [sg.Text("")],
         [sg.Checkbox("Filter out blank responses", default=True, font=("Courier New", 10))],
@@ -353,13 +303,17 @@ while True:
         while True:
             eventsearch, valuesearch = searchwindow.read()
             if eventsearch == "search.save":
-                name_file = sg.PopupGetText('Enter Filename') + ".txt"
-                if name_file != None:
-                    try:
-                        file1 = open(name_file, 'r+')
-                    except FileNotFoundError:
-                        with open(name_file, "w+") as outfile:
-                            json.dump(answerlist, outfile, indent=2)
+                try:
+                    name_file = sg.PopupGetText('Enter Filename') + ".txt"
+                except:
+                    pass
+                else:
+                    if name_file != None:
+                        try:
+                            file1 = open(name_file, 'r+')
+                        except FileNotFoundError:
+                            with open(name_file, "w+") as outfile:
+                                json.dump(answerlist, outfile, indent=2)
             if eventsearch == "search.submit":
                 answer = valuesearch[0]
                 keyformatter = valuesearch[1]
@@ -777,17 +731,40 @@ while True:
         mainwindow.Hide()
         comparelayout = [
         [sg.Text("Compare", size=(30, 1), justification="center", font=("Courier New", 24))], 
+        [sg.Input(key='compare.fake', enable_events=True, visible=False)],
         [sg.Text("  Input type: ", font=("Courier New", 10)), sg.Combo(typelist, default_value="user svid", size=(12, 1), font=("Courier New", 10))],
-        [sg.FileBrowse("Input 1", key="compare.in1", file_types=(("Text Files", "*.txt"),)), sg.FileBrowse("Input 2", key="compare.in2", file_types=(("Text Files", "*.txt"),))],
+        [sg.FileBrowse("Input 1", key="compare.in1", enable_events=True, file_types=(("Text Files", "*.txt"),)), sg.FileBrowse("Input 2", key="compare.in2", enable_events=True, file_types=(("Text Files", "*.txt"),))],
         [sg.Text("   Mode: ", font=("Courier New", 10)), sg.Combo(modelist, default_value="AND", size=(7, 1), font=("Courier New", 10))],
         [sg.Text(" Output type: ", font=("Courier New", 10)), sg.Combo(typelist, default_value="user svid", size=(12, 1), font=("Courier New", 10))],
         [sg.Multiline("", size=(105, 6), key="compare.output", auto_refresh=True, autoscroll=True, reroute_stdout=True, font=("Courier New", 10))],
         [sg.Text("")],
-        [sg.Button("Submit", key = "compare.submit", font=("Courier New", 10)), sg.Button("Clear Log", key="compare.clear", font=("Courier New", 10)), sg.Button("Cancel", key="compare.cancel", font=("Courier New", 10))]
+        [sg.Button("Submit", key = "compare.submit", font=("Courier New", 10)), sg.Button("Save Results", key="compare.save", font=("Courier New", 10)), sg.Button("Clear Log", key="compare.clear", font=("Courier New", 10)), sg.Button("Cancel", key="compare.cancel", font=("Courier New", 10))]
         ]
         comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
         while True:
             eventcompare, valuecompare = comparewindow.read()
+            if eventcompare == "compare.in1":
+                head, tail = os.path.split(valuecompare["compare.in1"])
+                filename = tail.split(".txt")
+                comparewindow.FindElement("compare.in2").Update(filename[0])
+            if eventcompare == "compare.in2":
+                head2, tail2 = os.path.split(valuecompare["compare.in2"])
+                filename2 = tail2.split(".txt")
+                comparewindow.FindElement("compare.in1").Update(filename2[0])
+            if eventcompare == "compare.fake":
+                pass
+            if eventcompare == "compare.save":
+                try:
+                    name_file = sg.PopupGetText('Enter Filename') + ".txt"
+                except:
+                    pass
+                else:
+                    if name_file != None:
+                        try:
+                            file1 = open(name_file, 'r+')
+                        except FileNotFoundError:
+                            with open(name_file, "w+") as outfile:
+                                json.dump(answerlistfinal, outfile, indent=2)
             if eventcompare == "compare.cancel":
                 comparewindow.close()
                 mainwindow.UnHide()
@@ -799,11 +776,15 @@ while True:
                 mode = valuecompare[1]
                 outputtype = valuecompare[2]
                 
-                with open(valuecompare["compare.in1"]) as infile:
-                    inputlist11 = json.load(infile)
-                    
-                with open(valuecompare["compare.in2"]) as infile:
-                    inputlist21 = json.load(infile)
+                try:
+                    with open(valuecompare["compare.in1"]) as infile:
+                        inputlist11 = json.load(infile)
+                        
+                    with open(valuecompare["compare.in2"]) as infile:
+                        inputlist21 = json.load(infile)
+                except:
+                    inputlist11 = []
+                    inputlist21 = []
                 
                 inputlist1 = []
                 inputlist2 = []
