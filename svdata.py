@@ -8,6 +8,8 @@ from datetime import datetime
 import svapi
 import webbrowser
 
+droptype = ["File", "File"]
+
 def answerreturn(answer):
     if answer == "user svid":
         answerlist.append(svid)
@@ -93,7 +95,6 @@ def answerreturn(answer):
         answerlist.append(userdata["members"])
     elif answer == "group balance":
         answerlist.append(userdata["balance"])
-
 def getkey(keyinput):
     if keyformatter == "user svid":
         return "id"
@@ -159,7 +160,6 @@ def getkey(keyinput):
         return "member"
     elif keyformatter == "group balance":
         return "balance"
-
 def removedupli(inputlist):
     templist = []
     for item in inputlist:
@@ -167,12 +167,10 @@ def removedupli(inputlist):
             templist.append(item)
     return templist
 
-helplist = ["Get Data", "Search", "Compare"]
-keylistgroup = ["group svid", "group name" , "group name", "group members", "group permission"]
-keylist = ["user svid", "username", "twitch id", "discord id", "post likes", "comment likes", "nationstate", "description", "user balance", "api use count", "minecraft id", "twitch last message minute", "twitch message xp", "discord commends", "discord commends sent", "discord last commend hour", "discord last commend message", "discord message xp", "discord message count", "discord warning count", "discord ban count", "discord kick count", "discord game xp", "image url", "district", "days since last move", "discord role id", "discord role name", "group id", "group name", "group member", "group balance"]
+keylist = ['api use count', 'comment likes', 'days since last move', 'description', 'discord ban count', 'discord commends', 'discord commends sent', 'discord game xp', 'discord id', 'discord kick count', 'discord last commend hour', 'discord last commend message', 'discord message count', 'discord message xp', 'discord role id', 'discord role name', 'discord warning count', 'district', 'group balance', 'group id', 'group member', 'group name', 'image url', 'minecraft id', 'nationstate', 'post likes', 'twitch id', 'twitch last message minute', 'twitch message xp', 'user balance', 'user svid', 'username']
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
 modelist = ["AND", "OR", "XOR"]
-typelist = ["user svid", "username", "discord id" , "twitch id" ,"minecraft id", "group svid", "group name"]
+typelist = ['discord id', 'group name', 'group svid', 'minecraft id', 'twitch id', 'user svid', 'username']
 urllistuser = [
     "https://spookvooper.com/user/search/a",
     "https://spookvooper.com/user/search/b", 
@@ -731,9 +729,10 @@ while True:
         mainwindow.Hide()
         comparelayout = [
         [sg.Text("Compare", size=(30, 1), justification="center", font=("Courier New", 24))], 
-        [sg.Input(key='compare.fake', enable_events=True, visible=False)],
         [sg.Text("  Input type: ", font=("Courier New", 10)), sg.Combo(typelist, default_value="user svid", size=(12, 1), font=("Courier New", 10))],
-        [sg.FileBrowse("Input 1", key="compare.in1", enable_events=True, file_types=(("Text Files", "*.txt"),)), sg.FileBrowse("Input 2", key="compare.in2", enable_events=True, file_types=(("Text Files", "*.txt"),))],
+        [sg.Drop(["Text", "File"], font=("Courier New", 10), key="compare.drop1", enable_events=True, default_value="File"), sg.Drop(["Text", "File"], key="compare.drop2", font=("Courier New", 10), enable_events=True, default_value="File")],
+        [sg.Multiline("Input 1", size=(50, 3), key="compare.t1", font=("Courier New", 10), visible=False), sg.Multiline("Input 2", size=(50, 3), key="compare.t2", font=("Courier New", 10), visible=False)],
+        [sg.FileBrowse("Input 1", key="compare.in1", enable_events=True, file_types=(("Text Files", "*.txt"),), disabled=False, font=("Courier New", 10)), sg.FileBrowse("Input 2", key="compare.in2", enable_events=True, file_types=(("Text Files", "*.txt"),), disabled=False, font=("Courier New", 10))],
         [sg.Text("   Mode: ", font=("Courier New", 10)), sg.Combo(modelist, default_value="AND", size=(7, 1), font=("Courier New", 10))],
         [sg.Text(" Output type: ", font=("Courier New", 10)), sg.Combo(typelist, default_value="user svid", size=(12, 1), font=("Courier New", 10))],
         [sg.Multiline("", size=(105, 6), key="compare.output", auto_refresh=True, autoscroll=True, reroute_stdout=True, font=("Courier New", 10))],
@@ -751,8 +750,28 @@ while True:
                 head2, tail2 = os.path.split(valuecompare["compare.in2"])
                 filename2 = tail2.split(".txt")
                 comparewindow.FindElement("compare.in1").Update(filename2[0])
-            if eventcompare == "compare.fake":
-                pass
+            if eventcompare == "compare.drop1":
+                if valuecompare["compare.drop1"] == "Text":
+                    droptype[0] = "Text"
+                    comparewindow.FindElement("compare.in1").Update(disabled=True)
+                    comparewindow.FindElement("compare.in1").Update("Input 2")
+                    comparewindow.FindElement("compare.t1").Update(visible=True)
+            if eventcompare == "compare.drop2":
+                if valuecompare["compare.drop2"] == "Text":
+                    droptype[1] = "Text"
+                    comparewindow.FindElement("compare.in2").Update(disabled=True)
+                    comparewindow.FindElement("compare.in2").Update("Input 2")
+                    comparewindow.FindElement("compare.t2").Update(visible=True)
+            if eventcompare == "compare.drop1":
+                if valuecompare["compare.drop1"] == "File":
+                    droptype[0] = "File"
+                    comparewindow.FindElement("compare.t1").Update(visible=False)
+                    comparewindow.FindElement("compare.in1").Update(disabled=False)
+            if eventcompare == "compare.drop2":
+                if valuecompare["compare.drop2"] == "File":
+                    droptype[1] = "File"
+                    comparewindow.FindElement("compare.t2").Update(visible=False)
+                    comparewindow.FindElement("compare.in2").Update(disabled=False)
             if eventcompare == "compare.save":
                 try:
                     name_file = sg.PopupGetText('Enter Filename') + ".txt"
@@ -775,16 +794,37 @@ while True:
                 intype = valuecompare[0]
                 mode = valuecompare[1]
                 outputtype = valuecompare[2]
+                droptype1 = droptype[0]
+                droptype2 = droptype[1]
                 
-                try:
-                    with open(valuecompare["compare.in1"]) as infile:
-                        inputlist11 = json.load(infile)
-                        
-                    with open(valuecompare["compare.in2"]) as infile:
-                        inputlist21 = json.load(infile)
-                except:
-                    inputlist11 = []
-                    inputlist21 = []
+                if droptype1 == "File":
+                    try:
+                        with open(valuecompare["compare.in1"]) as infile:
+                            inputlist11 = json.load(infile)
+                    except:
+                        inputlist11 = []
+
+                if droptype2 == "File":
+                    try:
+                        with open(valuecompare["compare.in2"]) as infile:
+                            inputlist21 = json.load(infile)
+                    except:
+                        inputlist21 = []
+
+                if droptype1 == "Text":
+                    inputlist11 = valuecompare["compare.t1"]
+                    inputlist11 = inputlist11.strip("\n")
+                    for item in inputlist11: 
+                        if item == "":
+                            inputlist11.pop(item)
+
+                if droptype2 == "Text":
+                    inputlist21 = valuecompare["compare.t2"]
+                    inputlist21 = inputlist21.strip("\n")
+                    inputlist21 = inputlist21.split(', ')
+                    for item in inputlist21: 
+                        if item == "":
+                            inputlist21.pop(item)
                 
                 inputlist1 = []
                 inputlist2 = []
@@ -793,8 +833,6 @@ while True:
                 with open("database.json") as infile:
                     database = json.load(infile)
 
-
-                        
                 if intype == "user svid":
                     for svid in inputlist11:
                         if svid != "None":
@@ -827,7 +865,6 @@ while True:
                                 inputlist2.append(svid)
                             except:
                                 pass
-                                
                 if intype == "minecraft id":
                     for minecraftid in inputlist11:
                         if minecraftid != "None":
@@ -843,7 +880,6 @@ while True:
                                 inputlist2.append(svid)
                             except:
                                 pass
-
                 if intype == "twitch id":
                     for svid in database:
                         numberofdates = len(database[svid])
@@ -872,33 +908,16 @@ while True:
                             except KeyError:
                                 pass
                 if intype == "username":
-                    for svid in database:
-                        numberofdates = len(database[svid])
-                        date = list(database[svid][numberofdates-1].keys())[0]
-                        userdata = database[svid][numberofdates-1][date]
-                        for username in inputlist11:
-                            if username != "None":
-                                try:
-                                    if userdata["userName"] == username:
-                                        try:
-                                            svid = userdata["id"]
-                                            inputlist1.append(svid)
-                                        except:
-                                            pass
-                                except KeyError:
-                                    pass
-                        for username in inputlist21:
-                            if username != "None":
-                                try:
-                                    if userdata["userName"] == username:
-                                        try:
-                                            svid = userdata["id"]
-                                            inputlist2.append(svid)
-                                        except:
-                                            pass
-                                except KeyError:
-                                    pass
-
+                    for username in inputlist11:
+                        try:
+                            inputlist1.append(svapi.GetSVIDFromUsername(username))
+                        except:
+                            pass
+                    for username in inputlist21:
+                        try:
+                            inputlist2.append(svapi.GetSVIDFromUsername(username))
+                        except:
+                            pass
                 if intype == "group name":
                     for groupname in inputlist11:
                         if groupname != None:
@@ -914,7 +933,6 @@ while True:
                                 inputlist2.append(svid)
                             except:
                                 pass
-                            
                 if intype == "group svid":
                     for svid in inputlist11:
                         if svid != "None":
