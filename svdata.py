@@ -253,38 +253,17 @@ sg.theme("Mono Green")
 
 mainlayout = [
 [sg.Text("SV Data", size=(30, 1), justification="center", font=("Courier New", 24))], 
-[sg.Text("Version 2.1", size=(30, 1), justification="center", font=("Courier New", 10))],
+[sg.Text("Version 1.2.1", size=(30, 1), justification="center", font=("Courier New", 10))],
 [sg.Text("created by Asdia_", size=(30, 1), justification="center", font=("Courier New", 8))],
-[sg.Frame("Users and Groups", font=("Courier New", 10), layout=[
-[sg.Button("Get Data", key = "main.getdata", font=("Courier New", 10)), sg.Button("Search", key = "main.search", font=("Courier New", 10)), sg.Button("Compare", key="main.compare", font=("Courier New", 10))],])],
-[sg.Frame("Stock Market", font=("Courier New", 10), layout = [
-    [sg.Button("Stocks", key = "main.stocks", font=("Courier New", 10))]
-])],
+[sg.Button("Get Data", key = "main.getdata", font=("Courier New", 10)), sg.Button("Search", key = "main.search", font=("Courier New", 10)), sg.Button("Compare", key="main.compare", font=("Courier New", 10))],
 [sg.Button("Help and Feedback", key="main.help", font=("Courier New", 10)), sg.Button("Quit", key="main.quit", font=("Courier New", 10))]
 ]
 
 
-mainwindow = sg.Window("SV User Data: Main", layout=mainlayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
+mainwindow = sg.Window("SV User Data: Main", layout=mainlayout, icon="unity-1k.ico", element_justification="c")
 
 while True:
     eventmain, valuemain = mainwindow.read()
-    if eventmain == "main.stocks":
-        mainwindow.Hide()
-        stockslayout = [
-        [sg.Text("Stocks", size=(30, 1), justification="center", font=("Courier New", 24))],
-        [sg.Button("B", key="stocks.b", font=("Courier New", 10))],
-        # repeat, 3 tickers per line FIX
-        [sg.Button("Cancel", key = "stocks.cancel", font=("Courier New", 10))]
-        ]
-        stockswindow = sg.Window("SV User Data: Stocks", layout=stockslayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
-        while True:
-            eventstocks, valuestocks = stockswindow.read()
-            if eventstocks == "stocks.b":
-                pass
-            if eventstocks == "stocks.cancel":
-                stockswindow.close()
-                mainwindow.UnHide()
-                break
     if eventmain == "main.search":
         mainwindow.Hide()
         searchlayout = [
@@ -299,7 +278,7 @@ while True:
         [sg.Checkbox("Filter out blank responses", default=True, font=("Courier New", 10))],
         [sg.Button("Submit", key = "search.submit", font=("Courier New", 10)), sg.Button("Save Result", key="search.save", font=("Courier New", 10)), sg.Button("Clear Log", key="search.clear", font=("Courier New", 10)), sg.Button("Cancel", key = "search.cancel", font=("Courier New", 10))]
         ]
-        searchwindow = sg.Window("SV User Data: Search", layout=searchlayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
+        searchwindow = sg.Window("SV User Data: Search", layout=searchlayout, icon="unity-1k.ico", element_justification="c")
         while True:
             eventsearch, valuesearch = searchwindow.read()
             if eventsearch == "search.file":
@@ -648,7 +627,7 @@ while True:
         [sg.Check("Create svid.txt", default=True, font=("Courier New", 10))],
         [sg.Button("Get Data", key = "getdata.getdata", font=("Courier New", 10)), sg.Button("Cancel", key = "getdata.cancel", font=("Courier New", 10))]
         ]
-        getdatawindow = sg.Window("SV User Data: Get Data", layout=getdatalayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
+        getdatawindow = sg.Window("SV User Data: Get Data", layout=getdatalayout, icon="unity-1k.ico", element_justification="c")
         while True:
             eventgetdata, valuegetdata = getdatawindow.read()
             if eventgetdata == "getdata.getdata":
@@ -795,7 +774,7 @@ while True:
         [sg.Text("")],
         [sg.Button("Submit", key = "compare.submit", font=("Courier New", 10)), sg.Button("Save Results", key="compare.save", font=("Courier New", 10)), sg.Button("Clear Log", key="compare.clear", font=("Courier New", 10)), sg.Button("Cancel", key="compare.cancel", font=("Courier New", 10))]
         ]
-        comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
+        comparewindow = sg.Window("SV User Data: Compare", layout=comparelayout, icon="unity-1k.ico", element_justification="c")
         while True:
             eventcompare, valuecompare = comparewindow.read()
             if eventcompare == "compare.in1":
@@ -1081,7 +1060,7 @@ while True:
             [sg.Text("")],
             [sg.Button("Cancel", key="help.cancel", font=("Courier New", 10))]
         ]
-        helpwindow = sg.Window("SV User Data: Help and Feedback", layout=helplayout, icon=r"Z:\random stuff\python\sv\data\unity-1k.ico", element_justification="c")
+        helpwindow = sg.Window("SV User Data: Help and Feedback", layout=helplayout, icon="unity-1k.ico", element_justification="c")
         while True:
             eventhelp, valuehelp = helpwindow.read()
             if eventhelp == "help.version":
