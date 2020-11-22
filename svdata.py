@@ -161,12 +161,10 @@ def getkey(keyinput):
         return "member"
     elif keyformatter == "group balance":
         return "balance"
-def removedupli(inputlist):
-    templist = []
-    for item in inputlist:
-        if item not in templist:
-            templist.append(item)
-    return templist
+
+def removedupli(inlist):
+    inlist = list(dict.fromkeys(inlist))
+    return inlist 
 
 keylist = ['api use count', 'comment likes', 'days since last move', 'description', 'discord ban count', 'discord commends', 'discord commends sent', 'discord game xp', 'discord id', 'discord kick count', 'discord last commend hour', 'discord last commend message', 'discord message count', 'discord message xp', 'discord role id', 'discord role name', 'discord warning count', 'district', 'group balance', 'group id', 'group member', 'group name', 'image url', 'minecraft id', 'nationstate', 'post likes', 'twitch id', 'twitch last message minute', 'twitch message xp', 'user balance', 'user svid', 'username']
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
