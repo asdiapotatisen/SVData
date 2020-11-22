@@ -6,6 +6,7 @@ import os
 import json
 from datetime import datetime
 import svapi
+from multiprocessing import Pool
 import webbrowser
 
 droptype = ["File", "File"]
@@ -657,8 +658,7 @@ while True:
                 svidlist = []
                 
                 svidcount = 0
-                
-                
+                        
                 for url in urllist:
                     req = Request(url, headers={'User-Agent': 'Mozilla/4.0'})
                     html_page = urlopen(req)
@@ -696,9 +696,10 @@ while True:
                 usercount = 0
                 for i in range(0, len(svidlist)):
                     svid = svidlist[i]
+                    dontgetdata = False
                     try:
                         svapi.GetUserDataFromSVID(svid)
-                    except:
+                    except: # GROUP
                         groupdict={}
                         groupdict["id"] = svid
                         groupdict["name"] = svapi.GetGroupnameFromSVID(svid)
@@ -718,7 +719,7 @@ while True:
                         except KeyError:
                             database[svid] = []
                             database[svid].append(todaysdata)
-                    else:
+                    else: # USER
                         try:
                             userdatabasedict = svapi.GetUserDataFromSVID(svid)
                             dayssincelastmove = svapi.GetDaysSinceLastMoveFromSVID(svid)
@@ -732,7 +733,7 @@ while True:
                             else:
                                 dontgetdata = True
                         
-                        if dontgetdata != True:
+                        if dontgetdata == False:
                             todaysdata = {date:userdatabasedict}
                         
                             try:
@@ -740,8 +741,7 @@ while True:
                             except KeyError:
                                 database[svid] = []
                                 database[svid].append(todaysdata)
-                        
-                        
+                    
                         
                     usercount += 1
                     
