@@ -1042,15 +1042,8 @@ while True:
         helplayout = [
 
             [sg.Frame("Help", font=("Courier New", 10), layout=[
-                [sg.Frame("Users and Groups", font=("Courier New", 10), layout=[
-                    [sg.Button("Get Data", key="help.getdata", font=("Courier New", 10)), sg.Button("Search", key="help.search", font=("Courier New", 10)), sg.Button("Compare", key="help.compare", font=("Courier New", 10))]
-                ])],
-                [sg.Frame("Stocks", layout=[
-                    
-                    # stock help layout
-                    
-                    
-                ])]])],
+                [sg.Button("Get Data", key="help.getdata", font=("Courier New", 10)), sg.Button("Search", key="help.search", font=("Courier New", 10)), sg.Button("Compare", key="help.compare", font=("Courier New", 10))]
+            ])],
             [sg.Frame("Feedback", font=("Courier New", 10), layout=[
                 [sg.Button("Report a bug", key="help.bug", font=("Courier New", 10)),
                  sg.Button("Request a new feature", key="help.feature", font=("Courier New", 10)),
