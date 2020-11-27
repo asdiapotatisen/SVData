@@ -8,9 +8,49 @@ from datetime import datetime
 import svapi
 from multiprocessing import Pool
 import webbrowser
+import aiohttp
+from aiohttp import ClientSession
+import asyncio
 
-droptype = ["File", "File"]
+droptype = ["File", "File"] # DO NOT CHANGE
 
+
+async def get_data(svidprefix):
+    dontgetdata = False
+    if svidprefix == "g-":
+        basedict={}
+        basedict["id"] = svid
+        basedict["name"] = svapi.GetGroupnameFromSVID(svid)
+        basedict["balance"] = svapi.GetBalanceFromSVID(svid)
+        
+        memlist = svapi.GetGroupMembersFromSVID(svid)
+        if len(memlist) > 0:
+            basedict["members"] = memlist
+        else:
+            basedict["members"] = None
+        
+    elif svidprefix == "u-": # USER
+        try:
+            basedict = svapi.GetUserDataFromSVID(svid)
+            dayssincelastmove = svapi.GetDaysSinceLastMoveFromSVID(svid)
+            basedict["dayssincelastmove"] = dayssincelastmove
+            rolelist = svapi.GetDiscordRolesFromSVID(svid)
+            basedict["discordroles"] = rolelist
+        except json.decoder.JSONDecodeError:
+            if onlydiscord == False:
+                basedict["discord_id"] = None
+                basedict["discordroles"] = []
+            else:
+                dontgetdata = True
+        
+    if dontgetdata == False:
+        todaysdata = {date:basedict}
+    
+        try:
+            database[svid].append(todaysdata)
+        except KeyError:
+            database[svid] = []
+            database[svid].append(todaysdata)
 def answerreturn(answer):
     if answer == "user svid":
         answerlist.append(svid)
@@ -96,7 +136,7 @@ def answerreturn(answer):
         answerlist.append(userdata["members"])
     elif answer == "group balance":
         answerlist.append(userdata["balance"])
-def getkey(keyinput):
+def getkey(keyformatter):
     if keyformatter == "user svid":
         return "id"
     elif keyformatter == "username":
@@ -161,11 +201,8 @@ def getkey(keyinput):
         return "member"
     elif keyformatter == "group balance":
         return "balance"
-
-def removedupli(inlist):
-    inlist = list(dict.fromkeys(inlist))
-    return inlist 
-
+def removedupli(inputlist):
+    return list(dict.fromkeys(inputlist))
 keylist = ['api use count', 'comment likes', 'days since last move', 'description', 'discord ban count', 'discord commends', 'discord commends sent', 'discord game xp', 'discord id', 'discord kick count', 'discord last commend hour', 'discord last commend message', 'discord message count', 'discord message xp', 'discord role id', 'discord role name', 'discord warning count', 'district', 'group balance', 'group id', 'group member', 'group name', 'image url', 'minecraft id', 'nationstate', 'post likes', 'twitch id', 'twitch last message minute', 'twitch message xp', 'user balance', 'user svid', 'username']
 operationlist = ["is", "is not", "is less than", "is greater than", "contains"]
 modelist = ["AND", "OR", "XOR"]
@@ -206,9 +243,9 @@ urllistuser = [
     "https://spookvooper.com/user/search/6", 
     "https://spookvooper.com/user/search/7", 
     "https://spookvooper.com/user/search/8", 
-    "https://spookvooper.com/user/search/9"
+    "https://spookvooper.com/user/search/9", 
+    "https://spookvooper.com/user/search/,"
     ]
-
 urllistgroup = [
     "https://spookvooper.com/group/search/a",
     "https://spookvooper.com/group/search/b", 
@@ -245,14 +282,15 @@ urllistgroup = [
     "https://spookvooper.com/group/search/6", 
     "https://spookvooper.com/group/search/7", 
     "https://spookvooper.com/group/search/8", 
-    "https://spookvooper.com/group/search/9"
-]
+    "https://spookvooper.com/group/search/9", 
+    "https://spookvooper.com/group/search/,"
+    ]
 
 sg.theme("Mono Green")
 
 mainlayout = [
 [sg.Text("SV Data", size=(30, 1), justification="center", font=("Courier New", 24))], 
-[sg.Text("Version 1.2.1", size=(30, 1), justification="center", font=("Courier New", 10))],
+[sg.Text("Version 2.0.0", size=(30, 1), justification="center", font=("Courier New", 10))],
 [sg.Text("created by Asdia_", size=(30, 1), justification="center", font=("Courier New", 8))],
 [sg.Button("Get Data", key = "main.getdata", font=("Courier New", 10)), sg.Button("Search", key = "main.search", font=("Courier New", 10)), sg.Button("Compare", key="main.compare", font=("Courier New", 10))],
 [sg.Button("Help and Feedback", key="main.help", font=("Courier New", 10)), sg.Button("Quit", key="main.quit", font=("Courier New", 10))]
@@ -280,11 +318,13 @@ while True:
         searchwindow = sg.Window("SV User Data: Search", layout=searchlayout, icon="unity-1k.ico", element_justification="c")
         while True:
             eventsearch, valuesearch = searchwindow.read()
+            touchedsearchtype = False
             if eventsearch == "search.file":
                 head, tail = os.path.split(valuesearch["search.file"])
                 filename = tail.split(".txt")
                 searchwindow.FindElement("search.file").Update(filename[0])
             if eventsearch == "search.type":
+                touchedsearchtype = True
                 searchtype2 = valuesearch["search.type"]
                 if searchtype2 == "all":
                     searchtype = 'sall'
@@ -311,7 +351,9 @@ while True:
                             with open(name_file, "w+") as outfile:
                                 json.dump(answerlist, outfile, indent=2)
             if eventsearch == "search.submit":
-                answer = valuesearch[0]
+                answer = valuesearch[0] # FIX may need a func for answerkey() to return correct key because the droplist may return wrong keys
+                if answer == "user balance":
+                    answer = "credits"
                 keyformatter = valuesearch[1]
                 operator = valuesearch[2]
                 value = valuesearch[3]
@@ -328,44 +370,41 @@ while True:
                         infile.write("{}")
                     with open("database.json") as infile:
                         database = json.load(infile)
-                        
-                if searchtype == "sall":
+                
+                if touchedsearchtype == True:
+                    if searchtype == "sall":
+                        svidin = []
+                        for svid in database:
+                            svidin.append(svid)
+                    if searchtype == "srangetext":
+                        svidin = valuesearch["search.text"]
+                        svidin = svidin.strip("\n")
+                        svidin = svidin.split(", ")
+                        for svid in svidin:
+                            if svid[1:2] != "-":
+                                svidin.pop(svid)
+                    if searchtype == "srangefile":
+                        head, tail = os.path.split(valuesearch["search.file"])
+                        filename = tail.split(".txt")
+                        searchwindow.FindElement("search.file").Update(filename[0])
+                        completename = filename[0] + ".txt"
+                        try:
+                            with open(completename) as infile:
+                                svidin = json.load(infile)
+                            for svid in svidin:
+                                if svid[1:2] != "-":
+                                    svidin.pop(svid)
+                        except:
+                            svidin = []
+                else:
                     svidin = []
                     for svid in database:
                         svidin.append(svid)
-                        
-                if searchtype == "srangetext":
-                    svidin = valuesearch["search.text"]
-                    svidin = svidin.strip("\n")
-                    svidin = svidin.split(", ")
-                    for item in svidin:
-                        try:
-                            svapi.GetBalanceFromSVID(item)
-                        except:
-                            svidin.pop(item)
-                        
-                if searchtype == "srangefile":
-                    head, tail = os.path.split(valuesearch["search.file"])
-                    filename = tail.split(".txt")
-                    searchwindow.FindElement("search.file").Update(filename[0])
-                    completename = filename[0] + ".txt"
-                    try:
-                        with open(completename) as infile:
-                            svidin = json.load(infile)
-                        for svid in svidin:
-                            try:
-                                svapi.GetBalanceFromSVID(svid)
-                            except:
-                                svidin.pop(svid)
-                    except:
-                        svidin = []
-
                     # pop up file selector
                     # database = json.load()
-                    
-
+                
                 answerlist = []
-                        
+
                 for svid in svidin:
                     userdatalist = database[svid] #list
                     for e in range(0, len(userdatalist)):
@@ -373,11 +412,10 @@ while True:
                         if userdatakey[0] == date:
                             userdata = userdatalist[e][date]
                             
-                            try:
-                                userdata["credits"]
-                            except: # group
+                            svidprefix = svid[:2]
+                            if svidprefix == "g-":
                                 svidtype = "group"
-                            else: # user
+                            if svidprefix == "u-":
                                 svidtype = "user"
                 
                             try:
@@ -656,7 +694,7 @@ while True:
                 svidlist = []
                 
                 svidcount = 0
-                        
+                
                 for url in urllist:
                     req = Request(url, headers={'User-Agent': 'Mozilla/4.0'})
                     html_page = urlopen(req)
@@ -691,60 +729,12 @@ while True:
                     with open("svid.txt", 'a') as outfile:
                         json.dump(svidlist, outfile, indent=2)
 
-                usercount = 0
                 for i in range(0, len(svidlist)):
                     svid = svidlist[i]
-                    dontgetdata = False
-                    try:
-                        svapi.GetUserDataFromSVID(svid)
-                    except: # GROUP
-                        groupdict={}
-                        groupdict["id"] = svid
-                        groupdict["name"] = svapi.GetGroupnameFromSVID(svid)
-                        groupdict["balance"] = svapi.GetBalanceFromSVID(svid)
-                        
-                        memlist = svapi.GetGroupMembersFromSVID(svid)
-                        if len(memlist) > 0:
-                            groupdict["members"] = memlist
-                        else:
-                            groupdict["members"] = None
-                        
-                        
-                        todaysdata = {date:groupdict}
-                        
-                        try:
-                            database[svid].append(todaysdata)
-                        except KeyError:
-                            database[svid] = []
-                            database[svid].append(todaysdata)
-                    else: # USER
-                        try:
-                            userdatabasedict = svapi.GetUserDataFromSVID(svid)
-                            dayssincelastmove = svapi.GetDaysSinceLastMoveFromSVID(svid)
-                            userdatabasedict["dayssincelastmove"] = dayssincelastmove
-                            rolelist = svapi.GetDiscordRolesFromSVID(svid)
-                            userdatabasedict["discordroles"] = rolelist
-                        except json.decoder.JSONDecodeError:
-                            if onlydiscord == False:
-                                userdatabasedict["discord_id"] = None
-                                userdatabasedict["discordroles"] = []
-                            else:
-                                dontgetdata = True
-                        
-                        if dontgetdata == False:
-                            todaysdata = {date:userdatabasedict}
-                        
-                            try:
-                                database[svid].append(todaysdata)
-                            except KeyError:
-                                database[svid] = []
-                                database[svid].append(todaysdata)
-                    
-                        
-                    usercount += 1
-                    
-                    print(f"Getting User Data           {usercount}     out of {len(svidlist)}")
-                
+                    svidprefix = svid[:2]
+                    asyncio.run(get_data(svidprefix))
+                    print(f"Getting Data:   {i+1} out of {len(svidlist)}")
+                                                
                 try:
                     os.remove("database.json")
                 except:
@@ -784,27 +774,27 @@ while True:
                 filename2 = tail2.split(".txt")
                 comparewindow.FindElement("compare.in1").Update(filename2[0])
             if eventcompare == "compare.drop1":
-                if valuecompare["compare.drop1"] == "Text":
-                    droptype[0] = "Text"
-                    comparewindow.FindElement("compare.in1").Update(disabled=True)
-                    comparewindow.FindElement("compare.in1").Update("Input 2")
-                    comparewindow.FindElement("compare.t1").Update(visible=True)
-            if eventcompare == "compare.drop2":
-                if valuecompare["compare.drop2"] == "Text":
-                    droptype[1] = "Text"
-                    comparewindow.FindElement("compare.in2").Update(disabled=True)
-                    comparewindow.FindElement("compare.in2").Update("Input 2")
-                    comparewindow.FindElement("compare.t2").Update(visible=True)
-            if eventcompare == "compare.drop1":
                 if valuecompare["compare.drop1"] == "File":
                     droptype[0] = "File"
-                    comparewindow.FindElement("compare.t1").Update(visible=False)
                     comparewindow.FindElement("compare.in1").Update(disabled=False)
+                    comparewindow.FindElement("compare.in1").Update("Input 1")
+                    comparewindow.FindElement("compare.t1").Update(visible=False)
+                if valuecompare["compare.drop1"] == "Text":
+                    droptype[0] = "Text"
+                    comparewindow.FindElement("compare.t1").Update(visible=True)
+                    comparewindow.FindElement("compare.in1").Update("Input 1")
+                    comparewindow.FindElement("compare.in1").Update(disabled=True)
             if eventcompare == "compare.drop2":
                 if valuecompare["compare.drop2"] == "File":
                     droptype[1] = "File"
-                    comparewindow.FindElement("compare.t2").Update(visible=False)
                     comparewindow.FindElement("compare.in2").Update(disabled=False)
+                    comparewindow.FindElement("compare.in2").Update("Input 2")
+                    comparewindow.FindElement("compare.t2").Update(visible=False)
+                if valuecompare["compare.drop2"] == "Text":
+                    droptype[1] = "Text"
+                    comparewindow.FindElement("compare.in2").Update("Input 2")
+                    comparewindow.FindElement("compare.t2").Update(visible=True)
+                    comparewindow.FindElement("compare.in2").Update(disabled=True)
             if eventcompare == "compare.save":
                 try:
                     name_file = sg.PopupGetText('Enter Filename') + ".txt"
@@ -849,15 +839,15 @@ while True:
                     inputlist11 = inputlist11.strip("\n")
                     for item in inputlist11: 
                         if item == "":
-                            inputlist11.pop(item)
-
+                            inputlist11.remove(item)
+                            print(inputlist11)
                 if droptype2 == "Text":
                     inputlist21 = valuecompare["compare.t2"]
                     inputlist21 = inputlist21.strip("\n")
                     inputlist21 = inputlist21.split(', ')
                     for item in inputlist21: 
                         if item == "":
-                            inputlist21.pop(item)
+                            inputlist21.remove(item)
                 
                 inputlist1 = []
                 inputlist2 = []
@@ -868,21 +858,19 @@ while True:
 
                 if intype == "user svid":
                     for svid in inputlist11:
-                        if svid != "None":
-                            try:
-                                svapi.GetBalanceFromSVID(svid)
-                            except:
-                                pass
-                            else:
+                        try:
+                            svidcheck = svid[1:2]
+                            if svidcheck == "-":
                                 inputlist1.append(svid)
+                        except:
+                            pass
                     for svid in inputlist21:
-                        if svid != "None":
-                            try:
-                                svapi.GetBalanceFromSVID(svid)
-                            except:
-                                pass
-                            else:
+                        try:
+                            svidcheck = svid[1:2]
+                            if svidcheck == "-":
                                 inputlist2.append(svid)
+                        except:
+                            pass
                 if intype == "discord id":
                     for discordid in inputlist11:
                         if discordid != "None":
@@ -968,30 +956,45 @@ while True:
                                 pass
                 if intype == "group svid":
                     for svid in inputlist11:
-                        if svid != "None":
-                            result = svapi.DoesGroupExistFromSVID(svid)
-                            if result == True:
+                        try:
+                            if svid[1:2] == "g-":
                                 inputlist1.append(svid)
+                        except:
+                            pass
                     for svid in inputlist21:
-                        if svid != "None":
-                            result = svapi.DoesGroupExistFromSVID(svid)
-                            if result == True:
+                        try:
+                            if svid[1:2] == "g-":
                                 inputlist2.append(svid)
-
+                        except:
+                            pass
                 if mode == "AND":
                     for svid in inputlist1:
                         if svid in inputlist2:
+                            print(svid)
                             answerlist.append(svid)
+                            inputlist1.remove(svid)
+                            inputlist2.remove(svid)
                 if mode == "XOR":
                     megalist = inputlist1 + inputlist2
                     megalist = removedupli(megalist)
                     for svid in megalist:
-                        if svid in inputlist1 and svid in inputlist2:
-                            pass
-                        else:
-                            answerlist.append(svid)
+                        if svid in inputlist1:
+                            if svid in inputlist2:
+                                inputlist1.remove(svid)
+                                inputlist2.remove(svid)
+                            else:
+                                answerlist.append(svid)
+                                inputlist1.remove(svid)
+                        elif svid in inputlist2:
+                            if svid in inputlist1:
+                                inputlist1.remove(svid)
+                                inputlist2.remove(svid)
+                            else:
+                                answerlist.append(svid)
+                                inputlist2.remove(svid)
                 if mode == "OR":
-                    answerlist = inputlist1 + inputlist2
+                    megalist = inputlist1 + inputlist2
+                    answerlist = removedupli(megalist)
                 
                 with open("database.json") as infile:
                     database = json.load(infile)
