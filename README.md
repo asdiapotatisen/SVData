@@ -1,4 +1,9 @@
-https://img.shields.io/github/issues/asdiapotatisen/SVData
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/asdiapotatisen/SVData/graphs/commit-activity)
+[![GitHub license](https://img.shields.io/github/license/asdiapotatisen/SVData.svg)](https://github.com/asdiapotatisen/SVData/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/asdiapotatisen/SVData.svg)](https://GitHub.com/asdiapotatisen/SVData/releases)
+[![Github all releases](https://img.shields.io/github/downloads/asdiapotatisen/SVData/total.svg)](https://GitHub.com/asdiapotatisen/SVData/releases/)
+[![GitHub issues](https://img.shields.io/github/issues/asdiapotatisen/SVData.svg)](https://GitHub.com/asdiapotatisen/SVData/issues/)
+[![GitHub pull-requests](https://img.shields.io/github/issues-pr/asdiapotatisen/SVData.svg)](https://GitHub.com/asdiapotatisen/SVData/pull/)
 
 # SVData
 An open-source application to search through and visualise SpookVooperian data.
