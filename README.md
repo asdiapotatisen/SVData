@@ -1,3 +1,5 @@
+https://img.shields.io/github/issues/asdiapotatisen/SVData
+
 # SVData
 An open-source application to search through and visualise SpookVooperian data.
 
