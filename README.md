@@ -6,21 +6,23 @@
 [![GitHub issues](https://img.shields.io/github/issues/asdiapotatisen/SVData.svg)](https://GitHub.com/asdiapotatisen/SVData/issues/)
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/asdiapotatisen/SVData.svg)](https://GitHub.com/asdiapotatisen/SVData/pull/)
 
+### Due to unforeseen circumstances, development on SVData will be put on hold indefinitely.  
+
+
+> The following content is true only for v2 and above.
 # SVData
-An open-source application to search through and visualise SpookVooperian data.
+An open-source application to search through and visualise SpookVooperian data. More details in the wiki.
 
 ## Installation
 
-Download the latest release (currently 1.2.1).
+Download [release 2.0.0](https://github.com/asdiapotatisen/SVData/releases/tag/v2.0.0).
 
 ## Usage
 
-Documentation can be found in the wiki.
+Using SVData is simple; just open SVData/SVData.exe. To learn more about the functions of the different menus, head over to the [wiki](https://github.com/asdiapotatisen/SVData/wik).
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
 
 ## License
 [Eclipse Public License v2.0](https://choosealicense.com/licenses/epl-2.0/)
