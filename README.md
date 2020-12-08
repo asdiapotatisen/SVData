@@ -11,7 +11,7 @@
 
 > The following content is true only for v2 and above.
 # SVData
-An open-source application to search through and visualise SpookVooperian data. More details in the wiki.
+An open-source application to search through and visualise SpookVooperian data.
 
 ## Installation
 
