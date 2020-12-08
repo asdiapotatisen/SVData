@@ -2,6 +2,7 @@
 [![GitHub license](https://img.shields.io/github/license/asdiapotatisen/SVData.svg)](https://github.com/asdiapotatisen/SVData/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/asdiapotatisen/SVData.svg)](https://GitHub.com/asdiapotatisen/SVData/releases)
 [![Github all releases](https://img.shields.io/github/downloads/asdiapotatisen/SVData/total.svg)](https://GitHub.com/asdiapotatisen/SVData/releases/)
+[![GitHub commits](https://img.shields.io/github/commits-since/asdiapotatisen/SVData/v1.0.0.svg)](https://GitHub.com/asdiapotatisen/SVData/commit/)
 [![GitHub issues](https://img.shields.io/github/issues/asdiapotatisen/SVData.svg)](https://GitHub.com/asdiapotatisen/SVData/issues/)
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/asdiapotatisen/SVData.svg)](https://GitHub.com/asdiapotatisen/SVData/pull/)
 
