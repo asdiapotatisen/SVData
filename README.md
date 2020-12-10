@@ -3,6 +3,7 @@
 [![GitHub license](https://img.shields.io/github/license/asdiapotatisen/SVData.svg)](https://github.com/asdiapotatisen/SVData/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/asdiapotatisen/SVData.svg)](https://GitHub.com/asdiapotatisen/SVData/releases)
 
+![IDE](https://aleen42.github.io/badges/src/visual_studio.svg)
 
 ### Due to unforeseen circumstances, development on SVData will be put on hold indefinitely.  
 
