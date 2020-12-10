@@ -6,8 +6,6 @@
 
 ### Due to unforeseen circumstances, development on SVData will be put on hold indefinitely.  
 
-
-> The following content is true only for v2 and above.
 # SVData
 An open-source application to search through and visualise SpookVooperian data.
 
@@ -28,7 +26,7 @@ To update to a newer version, follow the steps below:
 4. Delete SVData-oldversion.
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an discussion first to discuss what you would like to change.
 
 ## License
 [Eclipse Public License v2.0](https://choosealicense.com/licenses/epl-2.0/)
