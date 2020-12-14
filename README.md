@@ -30,4 +30,4 @@ To update to a newer version, follow the steps below:
 Pull requests are welcome. For major changes, please open an discussion first to discuss what you would like to change.
 
 ## License
-[Eclipse Public License v2.0](https://choosealicense.com/licenses/epl-2.0/)
+[GPL-2.0 License](https://choosealicense.com/licenses/gpl-2.0/)
