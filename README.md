@@ -18,14 +18,6 @@ Download [release 2.0.0](https://github.com/asdiapotatisen/SVData/releases/tag/v
 
 Using SVData is simple; just open SVData.exe. To learn more about the functions of the different menus, head over to the [wiki](https://github.com/asdiapotatisen/SVData/wik).
 
-## Updating
-
-To update to a newer version, follow the steps below:
-1. Download the latest [release](https://github.com/asdiapotatisen/SVData/releases).
-2. Delete SVData-newversion/SVData.
-3. Move SVData-oldversion/SVData to SVData-newversion.
-4. Delete SVData-oldversion.
-
 ## Contributing
 Pull requests are welcome. For major changes, please open an discussion first to discuss what you would like to change.
 
