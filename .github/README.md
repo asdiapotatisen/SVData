@@ -5,8 +5,6 @@
 
 ![IDE](https://aleen42.github.io/badges/src/visual_studio.svg)
 
-### Due to unforeseen circumstances, development on SVData will be put on hold indefinitely.  
-
 # SVData
 An open-source application to search through and visualise SpookVooperian data.
 
