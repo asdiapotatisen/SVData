@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
@@ -38,27 +32,27 @@ namespace SVData
                 {
                     try
                     {
-                        if (database[svid][date][key] == value)
+                        if (database[svid][date][key].ToString() == value)
                         {
                             dynamic answervalue = database[svid][date][answerkey];
                             answerlist.Add(answervalue);
                         }
                     }
                     catch
-                    {}
+                    { }
                 }
                 if (operation == "is not")
                 {
                     try
                     {
-                        if (database[svid][date][key] != value)
+                        if (database[svid][date][key].ToString() != value)
                         {
                             dynamic answervalue = database[svid][date][answerkey];
                             answerlist.Add(answervalue);
                         }
                     }
                     catch
-                    {}
+                    { }
                 }
                 if (operation == "contains")
                 {
@@ -71,7 +65,7 @@ namespace SVData
                         }
                     }
                     catch
-                    {}
+                    { }
                 }
                 if (operation == "less than")
                 {
@@ -84,7 +78,7 @@ namespace SVData
                         }
                     }
                     catch
-                    {}
+                    { }
                 }
                 if (operation == "greater than")
                 {
@@ -97,7 +91,7 @@ namespace SVData
                         }
                     }
                     catch
-                    {}
+                    { }
                 }
                 if (operation == "equals to")
                 {
@@ -128,6 +122,8 @@ namespace SVData
                         Search_Output.AppendText(Environment.NewLine);
                     }
                 }
+                Search_Output.AppendText(answerlist.Count.ToString());
+                Search_Output.AppendText(" results were found.");
             }
         }
         public void Search_Save_Click(object sender, EventArgs e)
@@ -138,6 +134,7 @@ namespace SVData
             saveFileDialog1.Filter = "txt files (*.txt)|*.txt";
             saveFileDialog1.FilterIndex = 2;
             saveFileDialog1.RestoreDirectory = true;
+            saveFileDialog1.InitialDirectory = Path.GetDirectoryName(Application.StartupPath) + @"\SVData\Results\Search";
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
