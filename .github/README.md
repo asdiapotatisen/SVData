@@ -8,6 +8,9 @@
 # SVData
 An open-source application to search through and visualise SpookVooperian data.
 
+## Requirements
+SVData can only be run by the Windows operating system. 
+
 ## Installation
 
 Download [release 2.0.0](https://github.com/asdiapotatisen/SVData/releases/tag/v2.0.0).
