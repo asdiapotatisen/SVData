@@ -21,7 +21,8 @@ namespace SVData
             string key = Search_Key.Text;
             string operation = Search_Operation.Text;
             string value = Search_Value.Text;
-            string date = Search_Date.Value.ToString("dd-MM-yy");
+            DateTime fromdate = Search_Date.Value;
+            DateTime todate = Search_date2.Value;
             bool removenull = Search_removenullvalues.Checked;
 
             if (value == "null")
@@ -31,75 +32,86 @@ namespace SVData
             answerlist.Clear();
             var text = File.ReadAllText("SVData/database.json");
             Dictionary<string, Dictionary<string, Dictionary<string, dynamic>>> database = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, dynamic>>>>(text);
+
+            var dateArr = new List<string>();
+
+            for (var date = fromdate; date <= todate; date = date.AddDays(1))
+            {
+                dateArr.Add(date.ToString("dd-MM-yy"));
+                Search_Output.AppendText(date.ToString("dd-MM-yy"));
+            }
             foreach (string svid in database.Keys)
             {
-                try
+                foreach (string date in dateArr)
                 {
-                    var dbvalue = database[svid][date][key] ?? "";
-                    dynamic answervalue = database[svid][date][answerkey] ?? "null";
-                    if (operation == "is")
+                    try
                     {
-                        try
+                        var dbvalue = database[svid][date][key] ?? "";
+                        dynamic answervalue = database[svid][date][answerkey] ?? "null";
+                        if (operation == "is")
                         {
-                            if (dbvalue.ToString() == value)
+                            try
                             {
-                                answerlist.Add(answervalue);
+                                if (dbvalue.ToString() == value)
+                                {
+                                    answerlist.Add(answervalue);
+                                }
                             }
+                            catch
+                            { }
                         }
-                        catch
-                        { }
-                    }
-                    if (operation == "is not")
-                    {
-                        try
+                        if (operation == "is not")
                         {
-                            if (dbvalue.ToString() != value)
+                            try
                             {
-                                answerlist.Add(answervalue);
+                                if (dbvalue.ToString() != value)
+                                {
+                                    answerlist.Add(answervalue);
+                                }
                             }
+                            catch
+                            { }
                         }
-                        catch
-                        { }
-                    }
-                    if (operation == "contains")
-                    {
-                        try
+                        if (operation == "contains")
                         {
-                            if (dbvalue.ToString().Contains(value))
+                            try
                             {
-                                answerlist.Add(answervalue);
+                                if (dbvalue.ToString().Contains(value))
+                                {
+                                    answerlist.Add(answervalue);
+                                }
                             }
+                            catch
+                            { }
                         }
-                        catch
-                        { }
-                    }
-                    if (operation == "less than")
-                    {
-                        try
+                        if (operation == "less than")
                         {
-                            if (dbvalue <= Int64.Parse(value))
+                            try
                             {
-                                answerlist.Add(answervalue);
+                                if (dbvalue <= Int64.Parse(value))
+                                {
+                                    answerlist.Add(answervalue);
+                                }
                             }
+                            catch
+                            { }
                         }
-                        catch
-                        { }
-                    }
-                    if (operation == "greater than")
-                    {
-                        try
+                        if (operation == "greater than")
                         {
-                            if (dbvalue >= Int64.Parse(value))
+                            try
                             {
-                                answerlist.Add(answervalue);
+                                if (dbvalue >= Int64.Parse(value))
+                                {
+                                    answerlist.Add(answervalue);
+                                }
                             }
+                            catch
+                            { }
                         }
-                        catch
-                        { }
                     }
+                    catch
+                    { }
                 }
-                catch
-                { }
             }
 
             List<dynamic> removeditems = new List<dynamic>();
