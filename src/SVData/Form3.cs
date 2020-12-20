@@ -122,9 +122,11 @@ namespace SVData
             if (answerlist.Count == 0)
             {
                 Search_Output.Text = "No results were found.";
+                Search_Save.Enabled = false;
             }
             else
             {
+                Search_Save.Enabled = true;
                 foreach (var item in answerlist)
                 {
                     Search_Output.AppendText(item.ToString());
