@@ -20,8 +20,5 @@ Download [release 2.0.0](https://github.com/asdiapotatisen/SVData/releases/tag/v
 
 Run SVData.exe. To learn more about the functions of the different menus, head over to the [wiki](https://github.com/asdiapotatisen/SVData/wiki).
 
-## Contributing
-Pull requests are welcome. For major changes, please open an discussion first to discuss what you would like to change.
-
 ## License
 [GPL-2.0 License](https://choosealicense.com/licenses/gpl-2.0/)
