@@ -124,6 +124,8 @@ namespace SVData
             this.Text = "SVData: Main";
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_Quit_Click);
+
 
         }
 
@@ -138,4 +140,3 @@ namespace SVData
         private System.Windows.Forms.Button Main_Quit;
     }
 }
-

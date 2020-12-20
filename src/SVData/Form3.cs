@@ -23,89 +23,82 @@ namespace SVData
             string value = Search_Value.Text;
             string date = Search_Date.Value.ToString("dd-MM-yy");
 
+            if (value == "null")
+            {
+                value = "";
+            }
             answerlist.Clear();
             var text = File.ReadAllText("SVData/database.json");
             Dictionary<string, Dictionary<string, Dictionary<string, dynamic>>> database = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, dynamic>>>>(text);
             foreach (string svid in database.Keys)
             {
-                if (operation == "is")
+                try
                 {
-                    try
+                    var dbvalue = database[svid][date][key] ?? "";
+                    dynamic answervalue = database[svid][date][answerkey];
+                    if (operation == "is")
                     {
-                        if (database[svid][date][key].ToString() == value)
+                        try
                         {
-                            dynamic answervalue = database[svid][date][answerkey];
-                            answerlist.Add(answervalue);
+                            if (dbvalue.ToString() == value)
+                            {
+                                answerlist.Add(answervalue);
+                            }
                         }
+                        catch
+                        { }
                     }
-                    catch
-                    { }
-                }
-                if (operation == "is not")
-                {
-                    try
+                    if (operation == "is not")
                     {
-                        if (database[svid][date][key].ToString() != value)
+                        try
                         {
-                            dynamic answervalue = database[svid][date][answerkey];
-                            answerlist.Add(answervalue);
+                            if (dbvalue.ToString() != value)
+                            {
+                                answerlist.Add(answervalue);
+                            }
                         }
+                        catch
+                        { }
                     }
-                    catch
-                    { }
-                }
-                if (operation == "contains")
-                {
-                    try
+                    if (operation == "contains")
                     {
-                        if (database[svid][date][key].ToString().Contains(value))
+                        try
                         {
-                            dynamic answervalue = database[svid][date][answerkey];
-                            answerlist.Add(answervalue);
+                            if (dbvalue.ToString().Contains(value))
+                            {
+                                answerlist.Add(answervalue);
+                            }
                         }
+                        catch
+                        { }
                     }
-                    catch
-                    { }
-                }
-                if (operation == "less than")
-                {
-                    try
+                    if (operation == "less than")
                     {
-                        if (database[svid][date][key] <= Int64.Parse(value))
+                        try
                         {
-                            dynamic answervalue = database[svid][date][answerkey];
-                            answerlist.Add(answervalue);
+                            if (dbvalue <= Int64.Parse(value))
+                            {
+                                answerlist.Add(answervalue);
+                            }
                         }
+                        catch
+                        { }
                     }
-                    catch
-                    { }
-                }
-                if (operation == "greater than")
-                {
-                    try
+                    if (operation == "greater than")
                     {
-                        if (database[svid][date][key] >= Int64.Parse(value))
+                        try
                         {
-                            dynamic answervalue = database[svid][date][answerkey];
-                            answerlist.Add(answervalue);
+                            if (dbvalue >= Int64.Parse(value))
+                            {
+                                answerlist.Add(answervalue);
+                            }
                         }
+                        catch
+                        { }
                     }
-                    catch
-                    { }
                 }
-                if (operation == "equals to")
-                {
-                    try
-                    {
-                        if (database[svid][date][key] == Int64.Parse(value))
-                        {
-                            dynamic answervalue = database[svid][date][answerkey];
-                            answerlist.Add(answervalue);
-                        }
-                    }
-                    catch
-                    { }
-                }
+                catch
+                { }
             }
             Search_Output.Text = "";
             if (answerlist.Count == 0)

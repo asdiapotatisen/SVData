@@ -108,7 +108,6 @@ namespace SVData
             "credits invested",
             "default role id",
             "description",
-            "description",
             "discord ban count",
             "discord commends",
             "discord commends sent",
@@ -150,7 +149,6 @@ namespace SVData
             "credits invested",
             "default role id",
             "description",
-            "description",
             "discord ban count",
             "discord commends",
             "discord commends sent",
@@ -189,7 +187,6 @@ namespace SVData
             "is not",
             "contains",
             "greater than",
-            "equals to",
             "less than"});
             this.Search_Operation.Location = new System.Drawing.Point(30, 326);
             this.Search_Operation.Name = "Search_Operation";

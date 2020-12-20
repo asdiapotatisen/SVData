@@ -34,7 +34,7 @@ namespace SVData
         }
         private void Main_Quit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Application.Exit();
         }
     }
 }
