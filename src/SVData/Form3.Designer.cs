@@ -54,6 +54,7 @@ namespace SVData
             this.Search_Output.Location = new System.Drawing.Point(25, 12);
             this.Search_Output.Multiline = true;
             this.Search_Output.Name = "Search_Output";
+            this.Search_Output.ReadOnly = true;
             this.Search_Output.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Search_Output.Size = new System.Drawing.Size(750, 178);
             this.Search_Output.TabIndex = 2;
