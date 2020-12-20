@@ -32,6 +32,18 @@ namespace SVData
         private void Main_Compare_Click(object sender, EventArgs e)
         {
         }
+
+        private void Main_Stats_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void Main_StocksMain_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void Main_Feed_Click(object sender, EventArgs e)
+        {
+        }
         private void Main_Quit_Click(object sender, EventArgs e)
         {
             Application.Exit();
