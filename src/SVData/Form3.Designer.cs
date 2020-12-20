@@ -44,6 +44,9 @@ namespace SVData
             this.Search_removenullvalues = new System.Windows.Forms.RadioButton();
             this.Search_date2 = new System.Windows.Forms.DateTimePicker();
             this.Search_label4 = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.Search_openfile = new System.Windows.Forms.Button();
+            this.Search_Range = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // Search_Output
@@ -58,16 +61,16 @@ namespace SVData
             // Search_label1
             // 
             this.Search_label1.AutoSize = true;
-            this.Search_label1.Location = new System.Drawing.Point(33, 210);
+            this.Search_label1.Location = new System.Drawing.Point(9, 197);
             this.Search_label1.Name = "Search_label1";
-            this.Search_label1.Size = new System.Drawing.Size(86, 25);
+            this.Search_label1.Size = new System.Drawing.Size(64, 25);
             this.Search_label1.TabIndex = 3;
-            this.Search_label1.Text = "Search all";
+            this.Search_label1.Text = "Search";
             // 
             // Search_label2
             // 
             this.Search_label2.AutoSize = true;
-            this.Search_label2.Location = new System.Drawing.Point(418, 210);
+            this.Search_label2.Location = new System.Drawing.Point(440, 197);
             this.Search_label2.Name = "Search_label2";
             this.Search_label2.Size = new System.Drawing.Size(59, 25);
             this.Search_label2.TabIndex = 4;
@@ -76,7 +79,7 @@ namespace SVData
             // Search_label3
             // 
             this.Search_label3.AutoSize = true;
-            this.Search_label3.Location = new System.Drawing.Point(436, 259);
+            this.Search_label3.Location = new System.Drawing.Point(433, 238);
             this.Search_label3.Name = "Search_label3";
             this.Search_label3.Size = new System.Drawing.Size(51, 25);
             this.Search_label3.TabIndex = 5;
@@ -84,7 +87,7 @@ namespace SVData
             // 
             // Search_Date
             // 
-            this.Search_Date.Location = new System.Drawing.Point(491, 256);
+            this.Search_Date.Location = new System.Drawing.Point(490, 235);
             this.Search_Date.Name = "Search_Date";
             this.Search_Date.Size = new System.Drawing.Size(289, 31);
             this.Search_Date.TabIndex = 6;
@@ -124,7 +127,7 @@ namespace SVData
             "twitch last message minute",
             "twitch message xp",
             "twitch messages"});
-            this.Search_Answer.Location = new System.Drawing.Point(125, 207);
+            this.Search_Answer.Location = new System.Drawing.Point(147, 194);
             this.Search_Answer.Name = "Search_Answer";
             this.Search_Answer.Size = new System.Drawing.Size(287, 33);
             this.Search_Answer.TabIndex = 14;
@@ -165,7 +168,7 @@ namespace SVData
             "twitch last message minute",
             "twitch message xp",
             "twitch messages"});
-            this.Search_Key.Location = new System.Drawing.Point(480, 207);
+            this.Search_Key.Location = new System.Drawing.Point(505, 194);
             this.Search_Key.Name = "Search_Key";
             this.Search_Key.Size = new System.Drawing.Size(287, 33);
             this.Search_Key.TabIndex = 8;
@@ -179,7 +182,7 @@ namespace SVData
             "contains",
             "greater than",
             "less than"});
-            this.Search_Operation.Location = new System.Drawing.Point(22, 256);
+            this.Search_Operation.Location = new System.Drawing.Point(19, 235);
             this.Search_Operation.Name = "Search_Operation";
             this.Search_Operation.Size = new System.Drawing.Size(115, 33);
             this.Search_Operation.TabIndex = 9;
@@ -216,7 +219,7 @@ namespace SVData
             // 
             // Search_Value
             // 
-            this.Search_Value.Location = new System.Drawing.Point(143, 256);
+            this.Search_Value.Location = new System.Drawing.Point(140, 235);
             this.Search_Value.Multiline = true;
             this.Search_Value.Name = "Search_Value";
             this.Search_Value.Size = new System.Drawing.Size(287, 33);
@@ -235,7 +238,7 @@ namespace SVData
             // 
             // Search_date2
             // 
-            this.Search_date2.Location = new System.Drawing.Point(276, 306);
+            this.Search_date2.Location = new System.Drawing.Point(281, 274);
             this.Search_date2.Name = "Search_date2";
             this.Search_date2.Size = new System.Drawing.Size(289, 31);
             this.Search_date2.TabIndex = 17;
@@ -243,17 +246,46 @@ namespace SVData
             // Search_label4
             // 
             this.Search_label4.AutoSize = true;
-            this.Search_label4.Location = new System.Drawing.Point(241, 306);
+            this.Search_label4.Location = new System.Drawing.Point(246, 274);
             this.Search_label4.Name = "Search_label4";
             this.Search_label4.Size = new System.Drawing.Size(29, 25);
             this.Search_label4.TabIndex = 18;
             this.Search_label4.Text = "to";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // Search_openfile
+            // 
+            this.Search_openfile.Location = new System.Drawing.Point(317, 317);
+            this.Search_openfile.Name = "Search_openfile";
+            this.Search_openfile.Size = new System.Drawing.Size(182, 34);
+            this.Search_openfile.TabIndex = 19;
+            this.Search_openfile.Text = "Input file";
+            this.Search_openfile.UseVisualStyleBackColor = true;
+            this.Search_openfile.Visible = false;
+            this.Search_openfile.Click += new System.EventHandler(this.Search_openfile_Click);
+            // 
+            // Search_Range
+            // 
+            this.Search_Range.FormattingEnabled = true;
+            this.Search_Range.Items.AddRange(new object[] {
+            "all",
+            "file"});
+            this.Search_Range.Location = new System.Drawing.Point(79, 194);
+            this.Search_Range.Name = "Search_Range";
+            this.Search_Range.Size = new System.Drawing.Size(62, 33);
+            this.Search_Range.TabIndex = 20;
+            this.Search_Range.SelectedIndexChanged += new System.EventHandler(this.Search_Range_SelectedIndexChanged);
             // 
             // Search
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.Search_Range);
+            this.Controls.Add(this.Search_openfile);
             this.Controls.Add(this.Search_label4);
             this.Controls.Add(this.Search_date2);
             this.Controls.Add(this.Search_removenullvalues);
@@ -273,7 +305,6 @@ namespace SVData
             this.Text = "SVData: Search";
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.Icon = new System.Drawing.Icon(@"SVData\icon.ico");
 
         }
 
@@ -293,5 +324,8 @@ namespace SVData
         private System.Windows.Forms.RadioButton Search_removenullvalues;
         private System.Windows.Forms.DateTimePicker Search_date2;
         private System.Windows.Forms.Label Search_label4;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button Search_openfile;
+        private System.Windows.Forms.ComboBox Search_Range;
     }
 }

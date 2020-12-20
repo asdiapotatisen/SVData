@@ -8,6 +8,7 @@ namespace SVData
 {
     public partial class Search : Form
     {
+        public string filePath;
         public Search()
         {
             InitializeComponent();
@@ -24,15 +25,37 @@ namespace SVData
             DateTime fromdate = Search_Date.Value;
             DateTime todate = Search_date2.Value;
             bool removenull = Search_removenullvalues.Checked;
+            string inputtype = Search_Range.Text;
 
             if (value == "null")
             {
                 value = "";
             }
             answerlist.Clear();
+
             var text = File.ReadAllText("SVData/database.json");
             Dictionary<string, Dictionary<string, Dictionary<string, dynamic>>> database = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, dynamic>>>>(text);
 
+            List<string> svidlist = new List<string>();
+
+            if (inputtype == "all")
+            {
+                foreach (string svid in database.Keys)
+                {
+                    svidlist.Add(svid);
+                }
+            }
+
+            else if (inputtype == "file")
+            {
+                try
+                {
+                    var texte = File.ReadAllText(filePath);
+                    svidlist = JsonConvert.DeserializeObject<List<string>>(texte);
+                }
+                catch
+                { }
+            }
             var dateArr = new List<string>();
 
             for (var date = fromdate; date <= todate.AddDays(1); date = date.AddDays(1))
@@ -40,9 +63,7 @@ namespace SVData
                 dateArr.Add(date.ToString("dd-MM-yy"));
             }
 
-            Search_label1.Text = dateArr.Count.ToString();
-
-            foreach (string svid in database.Keys)
+            foreach (string svid in svidlist)
             {
                 foreach (string date in dateArr)
                 {
@@ -176,12 +197,34 @@ namespace SVData
                 }
             }
         }
-
         private void Search_Cancel_Click(object sender, EventArgs e)
         {
             this.Close();
             var MainWindow = new Main();
             MainWindow.Show();
+        }
+        private void Search_openfile_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Filter = "txt files (*.txt)|*.txt";
+            openFileDialog1.FilterIndex = 2;
+            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.InitialDirectory = Path.GetDirectoryName(Application.StartupPath) + @"\SVData\Results";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                filePath = openFileDialog1.FileName;
+            }
+            Search_openfile.Text = Path.GetFileNameWithoutExtension(filePath);
+        }
+        private void Search_Range_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Search_Range.Text == "file")
+            {
+                Search_openfile.Visible = true;
+            }
+            else
+            {
+                Search_openfile.Visible = false;
+            }
         }
     }
 }
