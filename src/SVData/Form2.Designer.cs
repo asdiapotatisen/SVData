@@ -31,7 +31,6 @@ namespace SVData
         {
             this.GetData_GetData = new System.Windows.Forms.Button();
             this.GetData_Cancel = new System.Windows.Forms.Button();
-            this.GetData_Title = new System.Windows.Forms.Label();
             this.GetData_Progress = new System.Windows.Forms.ProgressBar();
             this.GetData_Status = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -56,19 +55,9 @@ namespace SVData
             this.GetData_Cancel.UseVisualStyleBackColor = true;
             this.GetData_Cancel.Click += new System.EventHandler(this.GetData_Cancel_Click);
             // 
-            // GetData_Title
-            // 
-            this.GetData_Title.AutoSize = true;
-            this.GetData_Title.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.GetData_Title.Location = new System.Drawing.Point(325, 20);
-            this.GetData_Title.Name = "GetData_Title";
-            this.GetData_Title.Size = new System.Drawing.Size(159, 48);
-            this.GetData_Title.TabIndex = 2;
-            this.GetData_Title.Text = "Get Data";
-            // 
             // GetData_Progress
             // 
-            this.GetData_Progress.Location = new System.Drawing.Point(98, 153);
+            this.GetData_Progress.Location = new System.Drawing.Point(98, 109);
             this.GetData_Progress.Name = "GetData_Progress";
             this.GetData_Progress.Size = new System.Drawing.Size(621, 41);
             this.GetData_Progress.TabIndex = 4;
@@ -77,7 +66,7 @@ namespace SVData
             // 
             this.GetData_Status.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.GetData_Status.AutoSize = true;
-            this.GetData_Status.Location = new System.Drawing.Point(335, 269);
+            this.GetData_Status.Location = new System.Drawing.Point(335, 225);
             this.GetData_Status.Name = "GetData_Status";
             this.GetData_Status.Size = new System.Drawing.Size(149, 25);
             this.GetData_Status.TabIndex = 5;
@@ -91,7 +80,6 @@ namespace SVData
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.GetData_Status);
             this.Controls.Add(this.GetData_Progress);
-            this.Controls.Add(this.GetData_Title);
             this.Controls.Add(this.GetData_Cancel);
             this.Controls.Add(this.GetData_GetData);
             this.Name = "GetData";
@@ -105,7 +93,6 @@ namespace SVData
 
         private System.Windows.Forms.Button GetData_GetData;
         private System.Windows.Forms.Button GetData_Cancel;
-        private System.Windows.Forms.Label GetData_Title;
         private System.Windows.Forms.ProgressBar GetData_Progress;
         private System.Windows.Forms.Label GetData_Status;
     }
