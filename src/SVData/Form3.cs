@@ -22,6 +22,7 @@ namespace SVData
             string operation = Search_Operation.Text;
             string value = Search_Value.Text;
             string date = Search_Date.Value.ToString("dd-MM-yy");
+            bool removenull = Search_removenullvalues.Checked;
 
             if (value == "null")
             {
@@ -35,7 +36,7 @@ namespace SVData
                 try
                 {
                     var dbvalue = database[svid][date][key] ?? "";
-                    dynamic answervalue = database[svid][date][answerkey];
+                    dynamic answervalue = database[svid][date][answerkey] ?? "null";
                     if (operation == "is")
                     {
                         try
@@ -100,6 +101,23 @@ namespace SVData
                 catch
                 { }
             }
+
+            List<dynamic> removeditems = new List<dynamic>();
+            foreach (var item in answerlist)
+            {
+                if (removenull == true)
+                {
+                    if (item.ToString() == "null")
+                    {
+                        removeditems.Add(item);
+                    }
+                }
+            }
+
+            foreach (var item in removeditems)
+            {
+                answerlist.Remove(item);
+            }
             Search_Output.Text = "";
             if (answerlist.Count == 0)
             {
@@ -109,11 +127,8 @@ namespace SVData
             {
                 foreach (var item in answerlist)
                 {
-                    if (item is not null)
-                    {
-                        Search_Output.AppendText(item.ToString());
-                        Search_Output.AppendText(Environment.NewLine);
-                    }
+                    Search_Output.AppendText(item.ToString());
+                    Search_Output.AppendText(Environment.NewLine);
                 }
                 Search_Output.AppendText(answerlist.Count.ToString());
                 Search_Output.AppendText(" results were found.");

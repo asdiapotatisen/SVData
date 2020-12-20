@@ -29,7 +29,6 @@ namespace SVData
         /// </summary>
         private void InitializeComponent()
         {
-            this.Search_Title = new System.Windows.Forms.Label();
             this.Search_Output = new System.Windows.Forms.TextBox();
             this.Search_label1 = new System.Windows.Forms.Label();
             this.Search_label2 = new System.Windows.Forms.Label();
@@ -42,32 +41,22 @@ namespace SVData
             this.Search_Save = new System.Windows.Forms.Button();
             this.Search_Cancel = new System.Windows.Forms.Button();
             this.Search_Value = new System.Windows.Forms.TextBox();
+            this.Search_removenullvalues = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
-            // 
-            // Search_Title
-            // 
-            this.Search_Title.AutoSize = true;
-            this.Search_Title.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Search_Title.Location = new System.Drawing.Point(356, 26);
-            this.Search_Title.Name = "Search_Title";
-            this.Search_Title.Size = new System.Drawing.Size(106, 41);
-            this.Search_Title.TabIndex = 1;
-            this.Search_Title.Text = "Search";
-            this.Search_Title.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // Search_Output
             // 
-            this.Search_Output.Location = new System.Drawing.Point(25, 82);
+            this.Search_Output.Location = new System.Drawing.Point(25, 12);
             this.Search_Output.Multiline = true;
             this.Search_Output.Name = "Search_Output";
+            this.Search_Output.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Search_Output.Size = new System.Drawing.Size(750, 178);
             this.Search_Output.TabIndex = 2;
-            this.Search_Output.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             // 
             // Search_label1
             // 
             this.Search_label1.AutoSize = true;
-            this.Search_label1.Location = new System.Drawing.Point(33, 280);
+            this.Search_label1.Location = new System.Drawing.Point(33, 210);
             this.Search_label1.Name = "Search_label1";
             this.Search_label1.Size = new System.Drawing.Size(86, 25);
             this.Search_label1.TabIndex = 3;
@@ -76,7 +65,7 @@ namespace SVData
             // Search_label2
             // 
             this.Search_label2.AutoSize = true;
-            this.Search_label2.Location = new System.Drawing.Point(418, 280);
+            this.Search_label2.Location = new System.Drawing.Point(418, 210);
             this.Search_label2.Name = "Search_label2";
             this.Search_label2.Size = new System.Drawing.Size(59, 25);
             this.Search_label2.TabIndex = 4;
@@ -85,7 +74,7 @@ namespace SVData
             // Search_label3
             // 
             this.Search_label3.AutoSize = true;
-            this.Search_label3.Location = new System.Drawing.Point(444, 329);
+            this.Search_label3.Location = new System.Drawing.Point(444, 259);
             this.Search_label3.Name = "Search_label3";
             this.Search_label3.Size = new System.Drawing.Size(33, 25);
             this.Search_label3.TabIndex = 5;
@@ -93,7 +82,7 @@ namespace SVData
             // 
             // Search_Date
             // 
-            this.Search_Date.Location = new System.Drawing.Point(483, 326);
+            this.Search_Date.Location = new System.Drawing.Point(483, 256);
             this.Search_Date.Name = "Search_Date";
             this.Search_Date.Size = new System.Drawing.Size(289, 31);
             this.Search_Date.TabIndex = 6;
@@ -133,7 +122,7 @@ namespace SVData
             "twitch last message minute",
             "twitch message xp",
             "twitch messages"});
-            this.Search_Answer.Location = new System.Drawing.Point(125, 277);
+            this.Search_Answer.Location = new System.Drawing.Point(125, 207);
             this.Search_Answer.Name = "Search_Answer";
             this.Search_Answer.Size = new System.Drawing.Size(287, 33);
             this.Search_Answer.TabIndex = 14;
@@ -174,7 +163,7 @@ namespace SVData
             "twitch last message minute",
             "twitch message xp",
             "twitch messages"});
-            this.Search_Key.Location = new System.Drawing.Point(480, 277);
+            this.Search_Key.Location = new System.Drawing.Point(480, 207);
             this.Search_Key.Name = "Search_Key";
             this.Search_Key.Size = new System.Drawing.Size(287, 33);
             this.Search_Key.TabIndex = 8;
@@ -188,7 +177,7 @@ namespace SVData
             "contains",
             "greater than",
             "less than"});
-            this.Search_Operation.Location = new System.Drawing.Point(30, 326);
+            this.Search_Operation.Location = new System.Drawing.Point(30, 256);
             this.Search_Operation.Name = "Search_Operation";
             this.Search_Operation.Size = new System.Drawing.Size(115, 33);
             this.Search_Operation.TabIndex = 9;
@@ -225,17 +214,29 @@ namespace SVData
             // 
             // Search_Value
             // 
-            this.Search_Value.Location = new System.Drawing.Point(151, 326);
+            this.Search_Value.Location = new System.Drawing.Point(151, 256);
             this.Search_Value.Multiline = true;
             this.Search_Value.Name = "Search_Value";
             this.Search_Value.Size = new System.Drawing.Size(287, 33);
             this.Search_Value.TabIndex = 15;
+            // 
+            // Search_removenullvalues
+            // 
+            this.Search_removenullvalues.AutoSize = true;
+            this.Search_removenullvalues.Location = new System.Drawing.Point(318, 327);
+            this.Search_removenullvalues.Name = "Search_removenullvalues";
+            this.Search_removenullvalues.Size = new System.Drawing.Size(188, 29);
+            this.Search_removenullvalues.TabIndex = 16;
+            this.Search_removenullvalues.TabStop = true;
+            this.Search_removenullvalues.Text = "Remove null values";
+            this.Search_removenullvalues.UseVisualStyleBackColor = true;
             // 
             // Search
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.Search_removenullvalues);
             this.Controls.Add(this.Search_Value);
             this.Controls.Add(this.Search_Cancel);
             this.Controls.Add(this.Search_Save);
@@ -248,7 +249,6 @@ namespace SVData
             this.Controls.Add(this.Search_label2);
             this.Controls.Add(this.Search_label1);
             this.Controls.Add(this.Search_Output);
-            this.Controls.Add(this.Search_Title);
             this.Name = "Search";
             this.Text = "SVData: Search";
             this.ResumeLayout(false);
@@ -257,8 +257,6 @@ namespace SVData
         }
 
         #endregion
-
-        private System.Windows.Forms.Label Search_Title;
         private System.Windows.Forms.TextBox Search_Output;
         private System.Windows.Forms.Label Search_label1;
         private System.Windows.Forms.Label Search_label2;
@@ -271,5 +269,6 @@ namespace SVData
         private System.Windows.Forms.Button Search_Save;
         private System.Windows.Forms.Button Search_Cancel;
         private System.Windows.Forms.TextBox Search_Value;
+        private System.Windows.Forms.RadioButton Search_removenullvalues;
     }
 }
