@@ -86,6 +86,7 @@ namespace SVData
             this.Text = "SVData: Get Data";
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.Icon = new System.Drawing.Icon(@"SVData\icon.ico");
 
         }
 

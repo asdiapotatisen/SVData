@@ -15,7 +15,7 @@ namespace SVData
         List<dynamic> answerlist = new List<dynamic>();
         public void Search_Submit_Click(object sender, EventArgs e)
         {
-            Search_Output.Text = "";
+            Search_Output.Clear();
             Search_Output.AppendText("Searching...");
             string answerkey = Search_Answer.Text;
             string key = Search_Key.Text;
@@ -35,11 +35,13 @@ namespace SVData
 
             var dateArr = new List<string>();
 
-            for (var date = fromdate; date <= todate; date = date.AddDays(1))
+            for (var date = fromdate; date <= todate.AddDays(1); date = date.AddDays(1))
             {
                 dateArr.Add(date.ToString("dd-MM-yy"));
-                Search_Output.AppendText(date.ToString("dd-MM-yy"));
             }
+
+            Search_label1.Text = dateArr.Count.ToString();
+
             foreach (string svid in database.Keys)
             {
                 foreach (string date in dateArr)
@@ -130,12 +132,15 @@ namespace SVData
             {
                 answerlist.Remove(item);
             }
+
             Search_Output.Text = "";
+
             if (answerlist.Count == 0)
             {
                 Search_Output.Text = "No results were found.";
                 Search_Save.Enabled = false;
             }
+
             else
             {
                 Search_Save.Enabled = true;
