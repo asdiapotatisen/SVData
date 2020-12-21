@@ -60,7 +60,7 @@ namespace SVData
             // 
             // Compare_In1
             // 
-            this.Compare_In1.Location = new System.Drawing.Point(234, 348);
+            this.Compare_In1.Location = new System.Drawing.Point(230, 348);
             this.Compare_In1.Name = "Compare_In1";
             this.Compare_In1.Size = new System.Drawing.Size(112, 34);
             this.Compare_In1.TabIndex = 1;
@@ -70,7 +70,7 @@ namespace SVData
             // 
             // Compare_In2
             // 
-            this.Compare_In2.Location = new System.Drawing.Point(422, 348);
+            this.Compare_In2.Location = new System.Drawing.Point(439, 348);
             this.Compare_In2.Name = "Compare_In2";
             this.Compare_In2.Size = new System.Drawing.Size(112, 34);
             this.Compare_In2.TabIndex = 2;
@@ -81,14 +81,14 @@ namespace SVData
             // Compare_Mode
             // 
             this.Compare_Mode.FormattingEnabled = true;
-            this.Compare_Mode.Location = new System.Drawing.Point(352, 350);
-            this.Compare_Mode.Name = "Compare_Mode";
-            this.Compare_Mode.Size = new System.Drawing.Size(64, 33);
-            this.Compare_Mode.TabIndex = 3;
             this.Compare_Mode.Items.AddRange(new object[] {
-                "AND",
-                "OR",
-                "XOR" });
+            "AND",
+            "OR",
+            "XOR"});
+            this.Compare_Mode.Location = new System.Drawing.Point(348, 350);
+            this.Compare_Mode.Name = "Compare_Mode";
+            this.Compare_Mode.Size = new System.Drawing.Size(85, 33);
+            this.Compare_Mode.TabIndex = 3;
             // 
             // Compare_Cancel
             // 
@@ -133,7 +133,6 @@ namespace SVData
             this.Controls.Add(this.Compare_In1);
             this.Controls.Add(this.Compare_Output);
             this.Name = "Compare";
-            this.Icon = new System.Drawing.Icon(@"SVData\icon.ico");
             this.Text = "SVData: Compare";
             this.ResumeLayout(false);
             this.PerformLayout();
