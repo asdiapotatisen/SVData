@@ -207,7 +207,7 @@ namespace SVData
         {
             openFileDialog1.Filter = "txt files (*.txt)|*.txt";
             openFileDialog1.FilterIndex = 2;
-            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.FileName = "";
             openFileDialog1.InitialDirectory = Path.GetDirectoryName(Application.StartupPath) + @"\SVData\Results";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {

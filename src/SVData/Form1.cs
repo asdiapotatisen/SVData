@@ -31,6 +31,9 @@ namespace SVData
         }
         private void Main_Compare_Click(object sender, EventArgs e)
         {
+            var CompareWindow = new Compare();
+            CompareWindow.Show();
+            this.Hide();
         }
 
         private void Main_Stats_Click(object sender, EventArgs e)

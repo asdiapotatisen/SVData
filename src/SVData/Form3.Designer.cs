@@ -304,6 +304,7 @@ namespace SVData
             this.Controls.Add(this.Search_Output);
             this.Name = "Search";
             this.Text = "SVData: Search";
+            this.Icon = new System.Drawing.Icon(@"SVData\icon.ico");
             this.ResumeLayout(false);
             this.PerformLayout();
 
