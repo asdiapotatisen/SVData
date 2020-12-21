@@ -4,8 +4,12 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net5.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<ApplicationIcon>unity-1k.ico</ApplicationIcon>
+		<PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+    <PublishTrimmed>true</PublishTrimmed>
+    <ApplicationIcon>unity-1k.ico</ApplicationIcon>
+		<StartupObject>SVData.Program</StartupObject>
 	</PropertyGroup>
 
 <ItemGroup>

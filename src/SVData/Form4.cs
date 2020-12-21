@@ -85,15 +85,6 @@ namespace SVData
                         }
                     }
                 }
-
-                Compare_Output.Clear();
-
-                foreach (var item in answerlist)
-                {
-                    Compare_Output.AppendText(item.ToString());
-                    Compare_Output.AppendText(System.Environment.NewLine);
-                }
-
             }
             else if (mode == "XOR")
             {
@@ -138,14 +129,6 @@ namespace SVData
                 {
                     answerlist.Remove(item);
                 }
-
-                Compare_Output.Clear();
-
-                foreach (var item in answerlist)
-                {
-                    Compare_Output.AppendText(item.ToString());
-                    Compare_Output.AppendText(System.Environment.NewLine);
-                }
             }
             else if (mode == "OR")
             {
@@ -169,17 +152,28 @@ namespace SVData
                 list1.AddRange(list2);
 
                 answerlist = list1.Distinct().ToList();
+            }
 
-                Compare_Output.Clear();
+            Compare_Output.Clear();
+            if (answerlist.Count == 0)
+            {
+                Compare_Output.Text = "No results were found.";
+                Compare_Save.Enabled = false;
+            }
 
+            else
+            {
+                Compare_Save.Enabled = true;
                 foreach (var item in answerlist)
                 {
                     Compare_Output.AppendText(item.ToString());
-                    Compare_Output.AppendText(System.Environment.NewLine);
+                    Compare_Output.AppendText(Environment.NewLine);
                 }
+                Compare_Output.AppendText(answerlist.Count.ToString());
+                Compare_Output.AppendText(" results were found.");
             }
-        }
 
+        }
         private void Compare_In1_Click(object sender, EventArgs e)
         {
             openFileDialog1.Filter = "txt files (*.txt)|*.txt";
