@@ -36,11 +36,6 @@ namespace SVData
             this.Main_Search = new System.Windows.Forms.Button();
             this.Main_Compare = new System.Windows.Forms.Button();
             this.Main_Quit = new System.Windows.Forms.Button();
-            this.Main_Stats = new System.Windows.Forms.Button();
-            this.Main_StocksMain = new System.Windows.Forms.Button();
-            this.Main_Feed = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.SuspendLayout();
             // 
             // Main_Title
@@ -75,7 +70,7 @@ namespace SVData
             // 
             // Main_GetData
             // 
-            this.Main_GetData.Location = new System.Drawing.Point(177, 195);
+            this.Main_GetData.Location = new System.Drawing.Point(177, 241);
             this.Main_GetData.Name = "Main_GetData";
             this.Main_GetData.Size = new System.Drawing.Size(112, 34);
             this.Main_GetData.TabIndex = 3;
@@ -85,7 +80,7 @@ namespace SVData
             // 
             // Main_Search
             // 
-            this.Main_Search.Location = new System.Drawing.Point(349, 195);
+            this.Main_Search.Location = new System.Drawing.Point(349, 241);
             this.Main_Search.Name = "Main_Search";
             this.Main_Search.Size = new System.Drawing.Size(112, 34);
             this.Main_Search.TabIndex = 4;
@@ -95,7 +90,7 @@ namespace SVData
             // 
             // Main_Compare
             // 
-            this.Main_Compare.Location = new System.Drawing.Point(521, 195);
+            this.Main_Compare.Location = new System.Drawing.Point(521, 241);
             this.Main_Compare.Name = "Main_Compare";
             this.Main_Compare.Size = new System.Drawing.Size(112, 34);
             this.Main_Compare.TabIndex = 5;
@@ -113,62 +108,11 @@ namespace SVData
             this.Main_Quit.UseVisualStyleBackColor = true;
             this.Main_Quit.Click += new System.EventHandler(this.Main_Quit_Click);
             // 
-            // Main_Stats
-            // 
-            this.Main_Stats.Location = new System.Drawing.Point(176, 277);
-            this.Main_Stats.Name = "Main_Stats";
-            this.Main_Stats.Size = new System.Drawing.Size(112, 34);
-            this.Main_Stats.TabIndex = 8;
-            this.Main_Stats.Text = "Stats";
-            this.Main_Stats.UseVisualStyleBackColor = true;
-            this.Main_Stats.Click += new System.EventHandler(this.Main_Stats_Click);
-            // 
-            // Main_StocksMain
-            // 
-            this.Main_StocksMain.Location = new System.Drawing.Point(350, 277);
-            this.Main_StocksMain.Name = "Main_StocksMain";
-            this.Main_StocksMain.Size = new System.Drawing.Size(112, 34);
-            this.Main_StocksMain.TabIndex = 9;
-            this.Main_StocksMain.Text = "Stocks";
-            this.Main_StocksMain.UseVisualStyleBackColor = true;
-            this.Main_StocksMain.Click += new System.EventHandler(this.Main_StocksMain_Click);
-            // 
-            // Main_Feed
-            // 
-            this.Main_Feed.Location = new System.Drawing.Point(520, 277);
-            this.Main_Feed.Name = "Main_Feed";
-            this.Main_Feed.Size = new System.Drawing.Size(112, 34);
-            this.Main_Feed.TabIndex = 10;
-            this.Main_Feed.Text = "Feed";
-            this.Main_Feed.UseVisualStyleBackColor = true;
-            this.Main_Feed.Click += new System.EventHandler(this.Main_Feed_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Location = new System.Drawing.Point(161, 166);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(491, 76);
-            this.groupBox1.TabIndex = 11;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Entities";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Location = new System.Drawing.Point(161, 248);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(491, 76);
-            this.groupBox2.TabIndex = 12;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Economy";
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.Main_Feed);
-            this.Controls.Add(this.Main_StocksMain);
-            this.Controls.Add(this.Main_Stats);
             this.Controls.Add(this.Main_Quit);
             this.Controls.Add(this.Main_Compare);
             this.Controls.Add(this.Main_Search);
@@ -176,14 +120,12 @@ namespace SVData
             this.Controls.Add(this.Main_CreatedBy);
             this.Controls.Add(this.Main_Version);
             this.Controls.Add(this.Main_Title);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.groupBox2);
             this.Name = "Main";
             this.Text = "SVData: Main";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_Quit_Click);
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.Icon = new System.Drawing.Icon(@"SVData\icon.ico");
+
         }
 
         #endregion
@@ -195,10 +137,5 @@ namespace SVData
         private System.Windows.Forms.Button Main_Search;
         private System.Windows.Forms.Button Main_Compare;
         private System.Windows.Forms.Button Main_Quit;
-        private System.Windows.Forms.Button Main_Stats;
-        private System.Windows.Forms.Button Main_StocksMain;
-        private System.Windows.Forms.Button Main_Feed;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
     }
 }

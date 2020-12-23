@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SVData
@@ -34,18 +27,6 @@ namespace SVData
             var CompareWindow = new Compare();
             CompareWindow.Show();
             this.Hide();
-        }
-
-        private void Main_Stats_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void Main_StocksMain_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void Main_Feed_Click(object sender, EventArgs e)
-        {
         }
         private void Main_Quit_Click(object sender, EventArgs e)
         {

@@ -135,6 +135,7 @@ namespace SVData
             this.Name = "Compare";
             this.Text = "SVData: Compare";
             this.ResumeLayout(false);
+            this.Icon = new System.Drawing.Icon(@"SVData\icon.ico");
             this.PerformLayout();
 
         }

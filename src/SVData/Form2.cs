@@ -140,7 +140,7 @@ namespace SVData
                     database[svid][date] = new Dictionary<string, object>();
                     database[svid][date]["api use count"] = snapShot.api_use_count;
                     database[svid][date]["comment likes"] = snapShot.comment_likes;
-                    database[svid][date]["credits"] = snapShot.credits;
+                    database[svid][date]["credits"] = snapShot.Credits;
                     database[svid][date]["description"] = snapShot.description;
                     database[svid][date]["discord ban count"] = snapShot.discord_ban_count;
                     database[svid][date]["discord commends"] = snapShot.discord_commends;
@@ -156,7 +156,7 @@ namespace SVData
                     database[svid][date]["discord warning count"] = snapShot.discord_warning_count;
                     database[svid][date]["district"] = snapShot.district;
                     database[svid][date]["id"] = snapShot.Id;
-                    database[svid][date]["image url"] = snapShot.image_url;
+                    database[svid][date]["image url"] = snapShot.Image_Url;
                     database[svid][date]["minecraft id"] = snapShot.minecraft_id;
                     database[svid][date]["name"] = snapShot.UserName;
                     database[svid][date]["nationstate"] = snapShot.nationstate;
