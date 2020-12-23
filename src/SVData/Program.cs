@@ -14,9 +14,7 @@ namespace SVData
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Console.WriteLine("Hey!");
             Application.Run(new Main());
-            Console.WriteLine("You should see a window now.");
         }
     }
 }
