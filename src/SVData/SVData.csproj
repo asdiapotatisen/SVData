@@ -11,7 +11,13 @@
     <PublishTrimmed>true</PublishTrimmed>
     <ApplicationIcon>unity-1k.ico</ApplicationIcon>
 		<StartupObject>SVData.Program</StartupObject>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<SignAssembly>false</SignAssembly>
+		<Platforms>AnyCPU;x64</Platforms>
+		<Version>2.0.0</Version>
+		<Authors>Asdia</Authors>
+		<Product>SVData</Product>
+		<PackageIcon>unity-1k.ico</PackageIcon>
+		<NoWin32Manifest>true</NoWin32Manifest>
 	</PropertyGroup>
 
 <ItemGroup>
@@ -44,6 +50,10 @@
   <None Update="Properties\Settings.settings">
     <Generator>SettingsSingleFileGenerator</Generator>
     <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+  </None>
+  <None Include="unity-1k.ico">
+    <Pack>True</Pack>
+    <PackagePath></PackagePath>
   </None>
 </ItemGroup>
 

@@ -122,10 +122,10 @@ namespace SVData
             this.Controls.Add(this.Main_Title);
             this.Name = "Main";
             this.Text = "SVData: Main";
+            this.Icon = new System.Drawing.Icon(@"SVData\icon.ico");
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_Quit_Click);
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.Icon = new System.Drawing.Icon(@"SVData\icon.ico");
 
         }
 
